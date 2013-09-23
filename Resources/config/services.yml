@@ -1,0 +1,7 @@
+parameters:
+#    skreen_house_factoryles_vrais_inconnus.example.class: SkreenHouseFactory\lesVraisInconnusBundle\Example
+
+services:
+#    skreen_house_factoryles_vrais_inconnus.example:
+#        class: %skreen_house_factoryles_vrais_inconnus.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

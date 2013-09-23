@@ -1,0 +1,20 @@
+{% extends 'SkreenHouseFactoryV3Bundle::layout.html.twig' %}
+
+{% block title %}{{ 'Les vrais inconnus : le concours' }}{% endblock %}
+{% block description %}{{ 'page.description.search'|trans({'%q%': app.request.get('q')}) }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex,follow" />{% endblock %}
+
+{% block content %}
+<script src="http://api.dmcdn.net/all.js"></script>
+<script>
+    var accessToken = '{{ session.access_token }}';
+    DM.init({
+        apiKey: '50167efef362edb0f608',
+        status: true, // check login status
+        cookie: true // enable cookies to allow the server to access the session
+    });
+</script>
+<div class="container">
+  <h1>LES VRAIS INCONNUS</h1>
+</div>
+{% endblock %}

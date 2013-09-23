@@ -1,0 +1,39 @@
+{
+    "name":        "SkreenHouseFactory/lesVraisInconnusBundle",
+    "type":        "symfony-bundle",
+    "description": "bundle mySkreen Les Vrais Inconnus.",
+    "keywords":    ["mySkreen", "bundle"],
+    "homepage":    "http://github.com/SkreenHouseFactory/lesVraisInconnusBundle",
+    "license":     "Private",
+
+    "authors": [
+        {
+            "name": "mySkreen",
+            "homepage": "http://myskreen.com"
+        }
+    ],
+
+    "require": {
+        "php":                      ">=5.3.2",
+        "symfony/framework-bundle": ">=2.3,<2.4-dev",
+        "symfony/yaml":             ">=2.3,<2.4-dev",
+        "twig/twig":                ">=1.6.5"
+    },
+
+    "require-dev": {
+    },
+
+    "repositories": [
+    ],
+
+    "minimum-stability": "dev",
+
+    "autoload": {
+        "psr-0": {
+            "SkreenHouseFactory\\lesVraisInconnusBundle": ""
+        }
+    },
+
+    "target-dir": "SkreenHouseFactory/lesVraisInconnusBundle"
+}
+

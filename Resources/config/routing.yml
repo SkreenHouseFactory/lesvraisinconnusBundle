@@ -1,0 +1,3 @@
+SkreenHouseFactorylesVraisInconnusBundle_homepage:
+    pattern:  /lesvraisinconnus
+    defaults: { _controller: SkreenHouseFactorylesVraisInconnusBundle:Default:index }
