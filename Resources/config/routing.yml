@@ -1,3 +1,7 @@
 SkreenHouseFactorylesVraisInconnusBundle_homepage:
-    pattern:  /lesvraisinconnus
+    pattern:  /
     defaults: { _controller: SkreenHouseFactorylesVraisInconnusBundle:Default:index }
+
+SkreenHouseFactorylesVraisInconnusBundle_done:
+    pattern:  /done
+    defaults: { _controller: SkreenHouseFactorylesVraisInconnusBundle:Default:done }
