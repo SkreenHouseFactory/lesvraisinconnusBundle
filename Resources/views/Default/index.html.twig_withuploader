@@ -1,0 +1,13 @@
+{% extends 'SkreenHouseFactoryV3Bundle::layout.html.twig' %}
+
+{% block title %}{{ 'Les vrais inconnus : le concours' }}{% endblock %}
+{% block description %}{{ 'page.description.search'|trans({'%q%': app.request.get('q')}) }}{% endblock %}
+{% block meta %}<meta name="robots" content="noindex,follow" />{% endblock %}
+
+{% block content %}
+<script src="http://api.dmcdn.net/all.js"></script>
+<div class="container">
+  <h1>LES VRAIS INCONNUS</h1>
+{{ uploader|raw }}
+</div>
+{% endblock %}
