@@ -14,7 +14,7 @@ $(document).ready(function(){
                       + '    </p>';
         } else {
           usernameMsg = '    <p>'
-                      + '      <label for="inputTitle">Pseudo : </label> <input id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" style="width: 200px" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
+                      + '      <label for="inputTitle">Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
                       + '      <span id="lePseudoMsg"></span>'
                       + '    </p>';
           hasFieldForUsername=true;
@@ -38,19 +38,19 @@ $(document).ready(function(){
         $('.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
         $('.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
         $('.modal .modal-body').html(''
-            + '<form id="vraisinconnus_form" method="post" action="/app_dev.php/lesvraisinconnus/done" enctype="multipart/form-data">'
+            + '<form id="vraisinconnus_form" role="form" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
             + '  <div id="leForm">'
-            + '    <div id="alert_msg" class="alert alert-error alert-block" style="display: none;background-color: #fcc">'
+            + '    <div id="alert_msg" class="alert alert-danger alert-block" style="display: none;">'
             + '      <strong>Aïe !</strong>'
             + '      <span id="alert_msg_body" style="font-size: 12px"></span>'
             + '    </div>'
             + usernameMsg
             + '    <p>'
-            + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input type="text" id="inputTitle" style="width: 200px" name="lvi_title" placeholder="Le titre"/>'
+            + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input class="form-control" type="text" id="inputTitle" name="lvi_title" placeholder="Le titre"/>'
             + '    </p>'
             + '    <p>'
             + '      <label for="inputDesc">Décris ta vidéo en quelques mots</label><br />'
-            + '      <textarea id="inputDesc" name="lvi_desc" style="width: 400px;" rows="5" placeholder="La description"/>'
+            + '      <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description"/>'
             + '    </p>'
             + '    <p>'
             + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="checkbox" id="inputCgv" name="lvi_cgv" value="1"/>'
@@ -60,7 +60,7 @@ $(document).ready(function(){
             + '      <span class="btn btn-large btn-info fileinput-button">'
             + '        <i class="glyphicon glyphicon-plus"></i>'
             + '        <span>Balance ton fichier (max. 1 Go)</span>'
-            + '        <input id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
+            + '        <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
             + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
             + '      <span style="font-weight: normal; font-size: 12px">Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p><br />'
