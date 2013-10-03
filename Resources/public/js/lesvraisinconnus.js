@@ -4,6 +4,36 @@ $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
     UI.auth(function() {
       if (Skhf.session.datas.email) {
+        console.log("DATA SESSION :::::::: ",Skhf.session.datas);
+        var usernameMsg = "";
+        var hasFieldForUsername=false;
+        var checkMsg = '';
+        if (Skhf.session.datas.username != undefined) {
+          usernameMsg = '    <p>'
+                      + '      <label for="inputTitle">Pseudo : </label> ' + Skhf.session.datas.username
+                      + '    </p>';
+        } else {
+          usernameMsg = '    <p>'
+                      + '      <label for="inputTitle">Pseudo : </label> <input id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" style="width: 200px" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
+                      + '      <span id="lePseudoMsg"></span>'
+                      + '    </p>';
+          hasFieldForUsername=true;
+          checkMsg = 'function checkAvailable(val) {'
+                   + '  API.query("GET", "availableUsername.json", {username: val, sk_id: "' + Skhf.session.datas.sk_id + '"}, function(resp){'
+                   + '    console.log(resp);'
+                   + '    if (!resp.available) {'
+                   + '      $("#lePseudo").val("");'
+                   + '      $("#lePseudoMsg").css("color","#c00");'
+                   + '      $("#lePseudoMsg").html("<strong>" + val + "</strong> n\'est pas disponible !");'
+                   + '      $("#lePseudo").focus();'
+                   + '    } else {'
+                   + '      $("#lePseudoMsg").css("color","#0c0");'
+                   + '      $("#lePseudoMsg").html("<strong>" + val + "</strong> est disponible.");'
+                   + '    }'
+                   + '  });'
+                   + '}';
+        }
+
         //L'UTILISATEUR EST CONNECTE
         $('.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
         $('.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
@@ -14,6 +44,7 @@ $(document).ready(function(){
             + '      <strong>Aïe !</strong>'
             + '      <span id="alert_msg_body" style="font-size: 12px"></span>'
             + '    </div>'
+            + usernameMsg
             + '    <p>'
             + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input type="text" id="inputTitle" style="width: 200px" name="lvi_title" placeholder="Le titre"/>'
             + '    </p>'
@@ -28,9 +59,9 @@ $(document).ready(function(){
             + '    <p>'
             + '      <span class="btn btn-large btn-info fileinput-button">'
             + '        <i class="glyphicon glyphicon-plus"></i>'
-            + '        <span>Balance ton fichier (max. 500 Mo)</span>'
-            + '        <input id="fileupload" type="file" name="lvi_file">'
-            + '      </span><br />'
+            + '        <span>Balance ton fichier (max. 1 Go)</span>'
+            + '        <input id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
+            + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
             + '      <span style="font-weight: normal; font-size: 12px">Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p><br />'
             + '    <p class="pull-right">'
@@ -39,8 +70,8 @@ $(document).ready(function(){
             + '  </div>'
             + '  <div id="leProgress" style="text-align: center; display: none">'
             + '    <h3 id="progressStatus">envoi du fichier en cours...</h3>'
-            + '    <div id="progress" class="progress">'
-            + '      <div class="progress-bar progress-bar-success"></div>'
+            + '    <div id="progress" class="progress progress-success progress-striped active">'
+            + '      <div class="progress-bar"></div>'
             + '    </div>'
             + '  </div>'
             + '  <div id="leSuccess" style="display: none">'
@@ -56,27 +87,30 @@ $(document).ready(function(){
             + '    <div class="alert alert-error" style="background-color: #fcc"><strong>OULA !</strong> Il y a visiblement eu un problème pendant le transfert.</div>'
             + '    <p>Je n\'accuse personne, mais je pense qu\'il serait de bon ton de recommencer la procédure, parce que, là, je'
             + '    suis désolé mais ça n\'est pas passé...</p>'
+            + '    <button class="btn btn-info" onClick="resetForm();">Revenir au formulaire</button>'
             + '  </div>'
             + '</form>'
             + '<script>'
             + '  function validateForm(arr, theForm, options) {'
-            + '    var title = arr[0];'
-            + '    var desc = arr[1];'
+            + (hasFieldForUsername ? 'var pseudo = arr[0];' : '')
+            + '    var title = arr[' + (hasFieldForUsername ? '1' : '0') + '];'
+            + '    var desc = arr[' + (hasFieldForUsername ? '2' : '1') + '];'
             + '    var cgv = false; var file = false;'
-            + '    if (arr.length == 4) {'
+            + '    if (arr.length == ' + (hasFieldForUsername ? '5' : '4') + ') {'
             + '      cgv  = true;'
-            + '      file = arr[3];'
+            + '      file = arr[' + (hasFieldForUsername ? '4' : '3') + '];'
             + '    } else {'
             + '      cgv  = false;'
-            + '      file = arr[2];'
+            + '      file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
             + '    }'
             + '    var errMsg = "";'
             + '    var errCount = 0;'
+            + (hasFieldForUsername ? 'if (pseudo.value == "") { errCount++; errMsg += "<br />- il faut renseigner un pseudo valide, sinon comment rendre à César;"; }' : '')
             + '    if (title.value == "") { errCount++; errMsg += "<br />- il faut renseigner le titre de la vidéo, sinon on ne sait pas de quoi il s\'agit;";}'
             + '    if (desc.value == "") { errCount++; errMsg += "<br />- il faut décrire un peu sa vidéo, parce que sinon on n\'a que le titre;";}'
             + '    if (!cgv) { errCount++; errMsg += "<br />- je sais, c\'est lourd, il faut cocher la case \\\"j\'accepte...\\\"...mais bon, c\'est la loi;";}'
             + '    if (file.value == "") { errCount++; errMsg += "<br />- ouais...il faut aussi mettre un fichier vidéo, c\'est un peu la base du projet;";}'
-            + '    else if (file.value.size > 500*1024*1024) { errCount++; errMsg += "<br />- je suis sûr que la vidéo est top, mais le fichier est trop gros (500Mo Max);";}'
+            + '    else if (file.value.size > 1024*1024*1024) { errCount++; errMsg += "<br />- je suis sûr que la vidéo est top, mais le fichier est trop gros (1Go Max);";}'
             + '    if (errCount == 1) { errMsg = "<br />Il y a un problème (sans gravité, heureusement) : " + errMsg; }'
             + '    else if (errCount > 1) { errMsg = "<br />Il y a plusieurs problèmes (sans gravité, heureusement) : " + errMsg; }'
             + '    console.log("ERR COUNT : " + errCount);'
@@ -127,12 +161,32 @@ $(document).ready(function(){
             + '    $("#leError").show();'
             + '  }'
             + ''
+            + '  function resetForm() {'
+            + '    $("#leForm").show();'
+            + '    $("#leProgress").hide();'
+            + '    $("#leSuccess").hide();'
+            + '    $("#leError").hide();'
+            + '  }'
+            + ''
+            + '  function displayFileInfo() {'
+            + '    var path = $("#fileupload").val();'
+            + '    var idx = Math.max(path.lastIndexOf("/"),path.lastIndexOf("\\\\")) + 1;'
+            + '    var name = path.substr(idx);'
+            + '    if (name != "") {'
+            + '      $("#fileInfo").html(name);'
+            + '    } else {'
+            + '      $("#fileInfo").html("");'
+            + '    }'
+            + '  }'
+            + ''
             + '  var formOptions = {'
             + '   beforeSubmit: validateForm,'
             + '   uploadProgress: showProgress,'
             + '   error: showError,'
             + '   success: showSuccess'
             + '  };'
+            + ''
+            + (hasFieldForUsername ? checkMsg : '')
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
         $('.modal').show();

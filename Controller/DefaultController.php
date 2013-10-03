@@ -64,6 +64,11 @@ class DefaultController extends Controller
           $title = $_POST['lvi_title'];
           $desc  = $_POST['lvi_desc'];
           $cgv   = $_POST['lvi_cgv'];
+          // On gère immédiatement le pseudo
+          if (array_key_exists('lvi_pseudo',$_POST)) {
+            $api = $this->get('api');
+            $api->fetch('updateUsername', array('sk_id' => $userId, 'username' => $_POST['lvi_pseudo']));
+          }
           if ($cgv == 1) {
             $dmApi = new Dailymotion();
             $dmApi->setGrantType(Dailymotion::GRANT_TYPE_PASSWORD, self::DAILYMOTION_API_KEY, self::DAILYMOTION_API_SECRET, array("manage_videos","write","delete"),
