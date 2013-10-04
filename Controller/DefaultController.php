@@ -1,8 +1,5 @@
 <?php
 
-ini_set('post_max_size', '2048M');
-ini_set('upload_max_filesize', '2048M');
-
 namespace SkreenHouseFactory\lesVraisInconnusBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,6 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\Constraints\Email;
 
 use SkreenHouseFactory\v3Bundle\Api\ApiManager;
+
+ini_set('post_max_size', '2048M');
+ini_set('upload_max_filesize', '2048M');
 
 class DefaultController extends Controller
 {
