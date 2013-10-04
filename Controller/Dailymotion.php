@@ -2,6 +2,9 @@
 
 namespace SkreenHouseFactory\lesVraisInconnusBundle\Controller;
 
+ini_set('post_max_size', '2048M');
+ini_set('upload_max_filesize', '2048M');
+
 /**
  * Provides access to the Dailymotion API.
  *
