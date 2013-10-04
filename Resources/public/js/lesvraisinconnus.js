@@ -2,6 +2,10 @@
 /*global window, $ */
 $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
+    //L'UTILISATEUR EST PAS CONNECTE
+    $('#skModal.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
+    $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
+
     UI.auth(function() {
       if (Skhf.session.datas.email) {
         console.log("DATA SESSION :::::::: ",Skhf.session.datas);
@@ -35,10 +39,10 @@ $(document).ready(function(){
         }
 
         //L'UTILISATEUR EST CONNECTE
-        $('.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
-        $('.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
-        $('.modal .modal-body').html(''
-            + '<form id="vraisinconnus_form" role="form" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
+        $('#skModal.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
+        $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
+        $('#skModal.modal .modal-body').html(''
+            + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
             + '  <div id="leForm">'
             + '    <div id="alert_msg" class="alert alert-danger alert-block" style="display: none;">'
             + '      <strong>Aïe !</strong>'
@@ -188,8 +192,9 @@ $(document).ready(function(){
             + ''
             + (hasFieldForUsername ? checkMsg : '')
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
+            + '  alert("ajaxForm");'
             + '</script>');
-        $('.modal').show();
+        $('#skModal.modal').show();
       }
     });
   });
