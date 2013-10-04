@@ -68,8 +68,6 @@ $(document).ready(function(){
             + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
             + '      <span>Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p><br />'
-            + '      <input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !"/>'
-            + '      <input  class="close" data-dismiss="modal" type="button"value="Fermer"/>'
             + '  </div>'
             + '  <div id="leProgress" style="text-align: center; display: none">'
             + '    <h3 id="progressStatus">envoi du fichier en cours...</h3>'
@@ -164,7 +162,7 @@ $(document).ready(function(){
             + '    $("#leError").show();'
             + '  }'
             + ''
-            + '  function resetForm() {'
+            + '  function resetForm() { $("#fileupload").val("");' 
             + '    $("#leForm").show();'
             + '    $("#leProgress").hide();'
             + '    $("#leSuccess").hide();'
@@ -192,6 +190,12 @@ $(document).ready(function(){
             + (hasFieldForUsername ? checkMsg : '')
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
+
+$('#skModal.modal .modal-footer').html(
+    '<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="$(\'#vraisinconnus_form\').submit();return false;">Envoie ! C\'est ton destain !</button>'
+  + '<input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
+
+
         $('#skModal.modal').modal('show');
       }
     });
