@@ -44,6 +44,20 @@ class DefaultController extends Controller
       return $this->render('SkreenHouseFactorylesVraisInconnusBundle:Default:index.html.twig');
     }
 
+    public function getHost(Request $request) {
+      switch(@$_SERVER['SERVER_ADDR']) {
+        case '78.109.88.183':
+          return 'uploads1.myskreen.com/DM';
+        break;
+        case '78.109.88.184':
+          return 'uploads2.myskreen.com/DM';
+        break;
+        default:
+          return $request->getHttpHost().self::UPLOAD_PATH;
+        break;
+      }
+    }
+
     public function doneAction(Request $request) {
       set_time_limit(2*60*60);
       // On récupère le myskreener_id
@@ -80,15 +94,21 @@ class DefaultController extends Controller
             try
             {
               // On déplace le fichier pour qu'il soit public sur une URL (attention, on vire les espaces, DM n'aime pas du tout !!)
-              
+
               $fileName = $this->get('kernel')->getRootDir() . '/../web'.self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
-              $fileUrl = 'http://'.$request->getHttpHost().self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              $fileUrl = 'http://'.$this->getHost($request) . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
               
               //echo '$fileName:'.$fileName;
               //echo '$fileUrl:'.$fileUrl;
               
               move_uploaded_file($_FILES["lvi_file"]["tmp_name"],$fileName);
-              $result = $dmApi->post('/me/videos', array('url' => $fileUrl, 'title' => $title, 'description' => $desc, 'published'=>false, 'tags'=>array("author_" . $userId)));
+              $result = $dmApi->post('/me/videos', array(
+                'url' => $fileUrl, 
+                'title' => $title, 
+                'description' => $desc, 
+                'published'=>false, 
+                'tags'=>array("author_" . $userId
+              )));
 
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id',$result)) {
@@ -129,7 +149,7 @@ class DefaultController extends Controller
         }
         if ($err) {
           // Appel API de gestion de l'erreur
-          $params = array('error'=> $err,'sk_id'=>$vidId);
+          $params = array('error'=> $err,'sk_id'=>$userId);
           $api->fetch('vraisInconnus',$params);
           unlink($fileName);
         }
