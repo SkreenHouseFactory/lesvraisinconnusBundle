@@ -2,6 +2,10 @@
 /*global window, $ */
 $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
+    //L'UTILISATEUR EST PAS CONNECTE
+    $('#skModal.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
+    $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
+
     UI.auth(function() {
       if (Skhf.session.datas.email) {
         console.log("DATA SESSION :::::::: ",Skhf.session.datas);
@@ -14,7 +18,7 @@ $(document).ready(function(){
                       + '    </p>';
         } else {
           usernameMsg = '    <p>'
-                      + '      <label for="inputTitle">Pseudo : </label> <input id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" style="width: 200px" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
+                      + '      <label for="inputTitle">Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
                       + '      <span id="lePseudoMsg"></span>'
                       + '    </p>';
           hasFieldForUsername=true;
@@ -35,38 +39,37 @@ $(document).ready(function(){
         }
 
         //L'UTILISATEUR EST CONNECTE
-        $('.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
-        $('.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
-        $('.modal .modal-body').html(''
-            + '<form id="vraisinconnus_form" method="post" action="/app_dev.php/lesvraisinconnus/done" enctype="multipart/form-data">'
+        $('#skModal.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
+        $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
+        $('#skModal.modal .modal-body').html(''
+            + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
             + '  <div id="leForm">'
-            + '    <div id="alert_msg" class="alert alert-error alert-block" style="display: none;background-color: #fcc">'
+            + '    <div id="alert_msg" class="alert alert-danger alert-block" style="display: none;">'
             + '      <strong>Aïe !</strong>'
             + '      <span id="alert_msg_body" style="font-size: 12px"></span>'
             + '    </div>'
             + usernameMsg
-            + '    <p>'
-            + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input type="text" id="inputTitle" style="width: 200px" name="lvi_title" placeholder="Le titre"/>'
+            + '    <p class="form-group">'
+            + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input class="form-control" type="text" id="inputTitle" name="lvi_title" placeholder="Le titre"/>'
             + '    </p>'
-            + '    <p>'
+            + '    <p class="form-group">'
             + '      <label for="inputDesc">Décris ta vidéo en quelques mots</label><br />'
-            + '      <textarea id="inputDesc" name="lvi_desc" style="width: 400px;" rows="5" placeholder="La description"/>'
+            + '      <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description"/>'
             + '    </p>'
-            + '    <p>'
-            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="checkbox" id="inputCgv" name="lvi_cgv" value="1"/>'
-            + '        J\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
+            + '    <p class="form-group accept">'
+            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="checkbox" id="inputCgv" name="lvi_cgv" value="1" checked="checked" style="visibility:hidden;"/>'
+            + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
             + '    </p>'
-            + '    <p>'
+            + '    <p class="form-group">'
             + '      <span class="btn btn-large btn-info fileinput-button">'
             + '        <i class="glyphicon glyphicon-plus"></i>'
             + '        <span>Balance ton fichier (max. 1 Go)</span>'
-            + '        <input id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
+            + '        <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
             + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
-            + '      <span style="font-weight: normal; font-size: 12px">Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
+            + '      <span>Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p><br />'
-            + '    <p class="pull-right">'
-            + '      <input id="submit_btn" class="btn btn-success" type="submit" value="Envoie ! C\'est ton destain !"/>'
-            + '    </p>'
+            + '      <input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !"/>'
+            + '      <input  class="close" data-dismiss="modal" type="button"value="Fermer"/>'
             + '  </div>'
             + '  <div id="leProgress" style="text-align: center; display: none">'
             + '    <h3 id="progressStatus">envoi du fichier en cours...</h3>'
@@ -190,7 +193,7 @@ $(document).ready(function(){
             + (hasFieldForUsername ? checkMsg : '')
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
-        $('.modal').show();
+        $('#skModal.modal').modal('show');
       }
     });
   });

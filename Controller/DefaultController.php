@@ -9,6 +9,9 @@ use Symfony\Component\Validator\Constraints\Email;
 
 use SkreenHouseFactory\v3Bundle\Api\ApiManager;
 
+ini_set('post_max_size', '2048M');
+ini_set('upload_max_filesize', '2048M');
+
 class DefaultController extends Controller
 {
 
@@ -17,8 +20,7 @@ class DefaultController extends Controller
 //    const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
 
 // DEV
-    const UPLOAD_PATH     = "/home/myskreen/dev1/v3/web/uploads/";
-    const UPLOAD_URL     = "http://v3.dev1.myskreen.typhon.net/uploads/";
+    const UPLOAD_PATH     = '/uploads/DM/';
 
     const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
     const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
@@ -86,10 +88,16 @@ class DefaultController extends Controller
               $fileUrl = self::UPLOAD_URL . str_replace(" ","_",$fName);
 error_log("FILE_NAME : " . $fileName,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
 error_log("FILE_URL : " . $fileUrl,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
+              
+              $fileName = $this->get('kernel')->getRootDir() . '/../web'.self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              $fileUrl = 'http://'.$request->getHttpHost().self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              
+              //echo '$fileName:'.$fileName;
+              //echo '$fileUrl:'.$fileUrl;
+              
               move_uploaded_file($_FILES["lvi_file"]["tmp_name"],$fileName);
               $result = $dmApi->post('/me/videos', array('url' => $fileUrl, 'title' => $title, 'description' => $desc, 'published'=>false, 'tags'=>array("author_" . $userId)));
 
-error_log("RESULT : " . $result,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id',$result)) {
                 // La vidéo a bien été uploadée
@@ -99,7 +107,8 @@ error_log("RESULT : " . $result,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
                   'video_id'      => $vidId,
                   'title'         => $title,
                   'description'   => $desc);
-                $api->fetch('vraisInconnus',$params);
+                $api->fetch('vraisInconnus', $params);
+                //echo '$api:'.$api->url;
                 // Si tout va bien, on crée la fiche programme et on lie à l'utilisateur
                 // On ajoute aussi une notification à l'utilisateur
                 // On envoie un mail à l'utilisateur avec :
