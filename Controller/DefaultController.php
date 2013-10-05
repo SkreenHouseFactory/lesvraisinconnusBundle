@@ -43,7 +43,9 @@ class DefaultController extends Controller
     }
 
     public function doneAction(Request $request) {
-      set_time_limit(2*60*60);
+      // Modifications configuration PHP pour accepter fichiers larges
+      set_time_limit(6*60*60);
+      $fileName = null; // Initialisation de la variable.
       // On récupère le myskreener_id
       $session_uid = $request->cookies->get('myskreen_session_uid');
       if ($session_uid) {
@@ -78,11 +80,16 @@ class DefaultController extends Controller
             try
             {
               // On déplace le fichier pour qu'il soit public sur une URL (attention, on vire les espaces, DM n'aime pas du tout !!)
-              $fileName = self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
-              $fileUrl = self::UPLOAD_URL . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              $fName = explode(".",$_FILES["lvi_file"]["name"]);
+              $fName = date('U') . "." . $fName[count($fName) - 1];
+              $fileName = self::UPLOAD_PATH . str_replace(" ","_",$fName);
+              $fileUrl = self::UPLOAD_URL . str_replace(" ","_",$fName);
+error_log("FILE_NAME : " . $fileName,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
+error_log("FILE_URL : " . $fileUrl,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
               move_uploaded_file($_FILES["lvi_file"]["tmp_name"],$fileName);
               $result = $dmApi->post('/me/videos', array('url' => $fileUrl, 'title' => $title, 'description' => $desc, 'published'=>false, 'tags'=>array("author_" . $userId)));
 
+error_log("RESULT : " . $result,3,"/home/myskreen/dev1/v3/app/logs/dev.log");
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id',$result)) {
                 // La vidéo a bien été uploadée
@@ -121,18 +128,18 @@ class DefaultController extends Controller
         }
         if ($err) {
           // Appel API de gestion de l'erreur
-          $params = array('error'=> $err,'sk_id'=>$vidId);
+          $params = array('error'=> $err,'sk_id'=>$userId);
           $api->fetch('vraisInconnus',$params);
-          unlink($fileName);
+          @unlink($fileName);
         }
         exit;
       } else {
         // Si on n'est pas dans un POST, on redirige vers la page d'accueil
         throw $this->createNotFoundException('Cette URL ne mène visiblement nulle part...');
-        unlink($fileName);
+        @unlink($fileName);
         exit;
       }
-      unlink($fileName);
+      @unlink($fileName);
       exit;
     }
   

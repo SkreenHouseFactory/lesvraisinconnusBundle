@@ -166,6 +166,7 @@ $(document).ready(function(){
             + '    $("#leProgress").hide();'
             + '    $("#leSuccess").hide();'
             + '    $("#leError").hide();'
+            + '    return false;'
             + '  }'
             + ''
             + '  function displayFileInfo() {'
