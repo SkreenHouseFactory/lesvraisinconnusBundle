@@ -59,7 +59,9 @@ class DefaultController extends Controller
     }
 
     public function doneAction(Request $request) {
-      set_time_limit(2*60*60);
+      // Modifications configuration PHP pour accepter fichiers larges
+      set_time_limit(6*60*60);
+      $fileName = null; // Initialisation de la variable.
       // On récupère le myskreener_id
       $session_uid = $request->cookies->get('myskreen_session_uid');
       if ($session_uid) {
@@ -151,16 +153,16 @@ class DefaultController extends Controller
           // Appel API de gestion de l'erreur
           $params = array('error'=> $err,'sk_id'=>$userId);
           $api->fetch('vraisInconnus',$params);
-          unlink($fileName);
+          @unlink($fileName);
         }
         exit;
       } else {
         // Si on n'est pas dans un POST, on redirige vers la page d'accueil
         throw $this->createNotFoundException('Cette URL ne mène visiblement nulle part...');
-        unlink($fileName);
+        @unlink($fileName);
         exit;
       }
-      unlink($fileName);
+      @unlink($fileName);
       exit;
     }
   
