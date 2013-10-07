@@ -45,7 +45,9 @@ class DefaultController extends Controller
     }
 
     public function getHost(Request $request) {
-      switch(@$_SERVER['SERVER_ADDR']) {
+      $host= gethostname();
+      $ip = gethostbyname($host);
+      switch($ip) {
         case '78.109.88.183':
           return 'uploads1.myskreen.com/DM/';
         break;
