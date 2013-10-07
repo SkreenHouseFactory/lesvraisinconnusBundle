@@ -16,15 +16,14 @@ class DefaultController extends Controller
 {
 
 // PROD  
-//    const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
-//    const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
+    const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
+    const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
 
 // DEV
-    const UPLOAD_PATH     = '/uploads/DM/';
-    const UPLOAD_URL      = 'http://v3.dev1.myskreen.typhon.net/uploads/';
+//    const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
+//    const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
 
-    const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
-    const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
+    const UPLOAD_PATH     = '/uploads/DM/';
 
     const ERR_FORM        = 1;
     const ERR_CGV         = 2;
@@ -43,6 +42,20 @@ class DefaultController extends Controller
 //        print_r($userDatas);exit;
       }
       return $this->render('SkreenHouseFactorylesVraisInconnusBundle:Default:index.html.twig');
+    }
+
+    public function getHost(Request $request) {
+      switch(@$_SERVER['SERVER_ADDR']) {
+        case '78.109.88.183':
+          return 'uploads1.myskreen.com/DM';
+        break;
+        case '78.109.88.184':
+          return 'uploads2.myskreen.com/DM';
+        break;
+        default:
+          return $request->getHttpHost().self::UPLOAD_PATH;
+        break;
+      }
     }
 
     public function doneAction(Request $request) {
@@ -83,19 +96,21 @@ class DefaultController extends Controller
             try
             {
               // On déplace le fichier pour qu'il soit public sur une URL (attention, on vire les espaces, DM n'aime pas du tout !!)
-              $fName = explode(".",$_FILES["lvi_file"]["name"]);
-              $fName = date('U') . "." . $fName[count($fName) - 1];
-              $fileName = self::UPLOAD_PATH . str_replace(" ","_",$fName);
-              $fileUrl = self::UPLOAD_URL . str_replace(" ","_",$fName);
-              
+
               $fileName = $this->get('kernel')->getRootDir() . '/../web'.self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
-              $fileUrl = 'http://'.$request->getHttpHost().self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              $fileUrl = 'http://'.$this->getHost($request) . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
               
               //echo '$fileName:'.$fileName;
               //echo '$fileUrl:'.$fileUrl;
               
               move_uploaded_file($_FILES["lvi_file"]["tmp_name"],$fileName);
-              $result = $dmApi->post('/me/videos', array('url' => $fileUrl, 'title' => $title, 'description' => $desc, 'published'=>false, 'tags'=>array("author_" . $userId)));
+              $result = $dmApi->post('/me/videos', array(
+                'url' => $fileUrl, 
+                'title' => $title, 
+                'description' => $desc, 
+                'published'=>false, 
+                'tags'=>array("author_" . $userId
+              )));
 
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id',$result)) {
