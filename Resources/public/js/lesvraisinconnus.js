@@ -7,7 +7,8 @@ $(document).ready(function(){
     $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
 
     UI.auth(function() {
-      if (Skhf.session.datas.email && $('#skModal.modal .modal-body')) {
+      if (Skhf.session.datas.email && 
+          !$('#skModal.modal .modal-body').html()) {
         console.log("DATA SESSION :::::::: ",Skhf.session.datas);
         var usernameMsg = "";
         var hasFieldForUsername=false;
@@ -42,6 +43,7 @@ $(document).ready(function(){
         $('#skModal.modal .modal-title').html('Toi aussi, envoie ta parodie des Inconnus');
         $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
         $('#skModal.modal .modal-body').html(''
+            + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
             + '  <div id="leForm">'
             + '    <div id="alert_msg" class="alert alert-danger alert-block" style="display: none;">'
@@ -53,15 +55,16 @@ $(document).ready(function(){
             + '      <label for="inputTitle">Donne un titre à ta vidéo</label> <input class="form-control" type="text" id="inputTitle" name="lvi_title" placeholder="Le titre"/>'
             + '    </p>'
             + '    <p class="form-group">'
-            + '      <label for="inputDesc">Décris ta vidéo en quelques mots</label><br />'
-            + '      <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description"/>'
+            + '      <label for="inputDesc">Présente ta vidéo le mieux que tu peux</label><br />'
+            + '      <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description" style="height:60px;"/>'
             + '    </p>'
             + '    <p class="form-group">'
+            + '        <input class="form-control" id="fileupload" type="file" name="lvi_file" style="position: absolute; opacity: 0;" onChange="displayFileInfo();">'
             + '      <span class="btn btn-large btn-info fileinput-button">'
             + '        <i class="glyphicon glyphicon-plus"></i>'
-            + '        <span>Balance ton fichier (max. 1 Go)</span>'
-            + '        <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
-            + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
+            + '        <span>Balance ton fichier (max. 2 Go)</span>'
+            + '      </span>'
+            + '      <div id="fileInfo" class="alert alert-info" style="display:none"></div>'
             + '      <span>Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p>'
             + '    <p class="form-group accept">'
@@ -91,6 +94,7 @@ $(document).ready(function(){
             + '    <button class="btn btn-info" onClick="resetForm();">Revenir au formulaire</button>'
             + '  </div>'
             + '</form>'
+            + '</div>'
             + '<script>'
             + '  function validateForm(arr, theForm, options) {'
             + (hasFieldForUsername ? 'var pseudo = arr[0];' : '')
@@ -111,7 +115,7 @@ $(document).ready(function(){
             + '    if (desc.value == "") { errCount++; errMsg += "<br />- il faut décrire un peu sa vidéo, parce que sinon on n\'a que le titre;";}'
             + '    if (!cgv) { errCount++; errMsg += "<br />- je sais, c\'est lourd, il faut cocher la case \\\"j\'accepte...\\\"...mais bon, c\'est la loi;";}'
             + '    if (file.value == "") { errCount++; errMsg += "<br />- ouais...il faut aussi mettre un fichier vidéo, c\'est un peu la base du projet;";}'
-            + '    else if (file.value.size > 1024*1024*1024) { errCount++; errMsg += "<br />- je suis sûr que la vidéo est top, mais le fichier est trop gros (1Go Max);";}'
+            + '    else if (file.value.size > 2*1024*1024*1024) { errCount++; errMsg += "<br />- je suis sûr que la vidéo est top, mais le fichier est trop gros (max. 2 Go);";}'
             + '    if (errCount == 1) { errMsg = "<br />Il y a un problème (sans gravité, heureusement) : " + errMsg; }'
             + '    else if (errCount > 1) { errMsg = "<br />Il y a plusieurs problèmes (sans gravité, heureusement) : " + errMsg; }'
             + '    console.log("ERR COUNT : " + errCount);'
@@ -129,6 +133,7 @@ $(document).ready(function(){
             + ''
             + '  function showProgress(e, position, total, percentComplete) {'
             + '    console.log("ON UPDATE LA PROGRESS BAR : " + percentComplete);'
+            + '    $("#submit_btn").css("opacity","0.1").attr("disabled","disabled");'
             + '    $("#progress .progress-bar").css("width",percentComplete + "%");'
             + '    if (percentComplete > 97) { $("#progressStatus").html("eh ben, c\'est pas dommage...")}'
             + '    else if (percentComplete > 84) { $("#progressStatus").html("plus que "+(100 - percentComplete)+"% et on y est...")}'
@@ -149,37 +154,36 @@ $(document).ready(function(){
             + ''
             + '  function showSuccess(responseText, statusText, xhr, theForm) {'
             + '    console.log("FORMULAIRE TRAITE AVEC SUCCES - YOUPI !!");'
-            + '    $("#leForm").hide();'
-            + '    $("#leProgress").hide();'
+            + '    $("#leForm, #leProgress, #leError").hide();'
             + '    $("#leSuccess").show();'
-            + '    $("#leError").hide();'
             + '  }'
             + ''
             + '  function showError() {'
             + '    console.log("FORMULAIRE TRAITE AVEC ERREUR - ZUT-TEUH !!");'
-            + '    $("#leForm").hide();'
-            + '    $("#leProgress").hide();'
-            + '    $("#leSuccess").hide();'
+            + '    $("#leForm, #leProgress, #leSuccess").hide();'
             + '    $("#leError").show();'
             + '  }'
             + ''
             + '  function resetForm() {'
+            + '    $("#submit_btn").css("opacity","1").removeAttr("disabled");'
             + '    $("#fileupload").val("");'
             + '    $("#leForm").show();'
-            + '    $("#leProgress").hide();'
-            + '    $("#leSuccess").hide();'
-            + '    $("#leError").hide();'
+            + '    $("#leProgress, #leSuccess, #leError").hide();'
             + '    return false;'
             + '  }'
             + ''
-            + '  function displayFileInfo() {'
+            + '  function displayFileInfo() { '
             + '    var path = $("#fileupload").val();'
             + '    var idx = Math.max(path.lastIndexOf("/"),path.lastIndexOf("\\\\")) + 1;'
             + '    var name = path.substr(idx);'
             + '    if (name != "") {'
-            + '      $("#fileInfo").html(name);'
+            + '      $("#fileInfo").html("Vidéo sélectionnée : " + name).show();'
+            + '      $(".fileinput-button").removeClass("btn-info").addClass("btn-success"); '
+            + '      $(".fileinput-button i").removeClass("glyphicon-plus").addClass("glyphicon-ok"); '
             + '    } else {'
             + '      $("#fileInfo").html("");'
+            + '      $(".fileinput-button").removeClass("btn-success").addClass("btn-info"); '
+            + '      $(".fileinput-button i").removeClass("glyphicon-ok").addClass("glyphicon-plus"); '
             + '    }'
             + '  }'
             + ''
@@ -194,7 +198,7 @@ $(document).ready(function(){
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="$(\'#vraisinconnus_form\').submit()">Envoie ! C\'est ton destain !</button><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
+        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Envoie ! C\'est ton destain !</button><input  class="close" data-dismiss="modal" type="button"value="Fermer" style="display: inline-block;width: auto;"/>');
         $('#skModal.modal').modal('show');
       }
     });
