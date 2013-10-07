@@ -164,6 +164,7 @@ $(document).ready(function(){
             + '  }'
             + ''
             + '  function resetForm() {'
+            + '    $("#fileupload").val("");'
             + '    $("#leForm").show();'
             + '    $("#leProgress").hide();'
             + '    $("#leSuccess").hide();'
@@ -193,7 +194,7 @@ $(document).ready(function(){
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !"/><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
+        $('#skModal.modal .modal-footer').html('<input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !" onClick="$("#vraisinconnus_form").submit()"/><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
         $('#skModal.modal').modal('show');
       }
     });
