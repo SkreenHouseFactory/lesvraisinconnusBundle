@@ -56,10 +56,6 @@ $(document).ready(function(){
             + '      <label for="inputDesc">Décris ta vidéo en quelques mots</label><br />'
             + '      <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description"/>'
             + '    </p>'
-            + '    <p class="form-group accept">'
-            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="checkbox" id="inputCgv" name="lvi_cgv" value="1" checked="checked" style="visibility:hidden;"/>'
-            + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
-            + '    </p>'
             + '    <p class="form-group">'
             + '      <span class="btn btn-large btn-info fileinput-button">'
             + '        <i class="glyphicon glyphicon-plus"></i>'
@@ -67,9 +63,11 @@ $(document).ready(function(){
             + '        <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
             + '      </span>&nbsp;<span id="fileInfo" style="color: #0c0; font-size: 11px;"></span><br />'
             + '      <span>Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
-            + '    </p><br />'
-            + '      <input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !"/>'
-            + '      <input  class="close" data-dismiss="modal" type="button"value="Fermer"/>'
+            + '    </p>'
+            + '    <p class="form-group accept">'
+            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1" checked="checked"/>'
+            + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
+            + '    </p>'
             + '  </div>'
             + '  <div id="leProgress" style="text-align: center; display: none">'
             + '    <h3 id="progressStatus">envoi du fichier en cours...</h3>'
@@ -194,6 +192,8 @@ $(document).ready(function(){
             + (hasFieldForUsername ? checkMsg : '')
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
+
+        $('#skModal.modal .modal-footer').html('<input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !"/><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
         $('#skModal.modal').modal('show');
       }
     });

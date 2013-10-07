@@ -47,10 +47,10 @@ class DefaultController extends Controller
     public function getHost(Request $request) {
       switch(@$_SERVER['SERVER_ADDR']) {
         case '78.109.88.183':
-          return 'uploads1.myskreen.com/DM';
+          return 'uploads1.myskreen.com/DM/';
         break;
         case '78.109.88.184':
-          return 'uploads2.myskreen.com/DM';
+          return 'uploads2.myskreen.com/DM/';
         break;
         default:
           return $request->getHttpHost().self::UPLOAD_PATH;
