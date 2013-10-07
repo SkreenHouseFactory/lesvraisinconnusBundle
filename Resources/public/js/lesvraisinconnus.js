@@ -7,7 +7,7 @@ $(document).ready(function(){
     $('#skModal.modal .modal-message').html('Si ta parodie plaît aux Inconnus, elle sera peut-être diffusée sur France 2.');
 
     UI.auth(function() {
-      if (Skhf.session.datas.email) {
+      if (Skhf.session.datas.email && $('#skModal.modal .modal-body')) {
         console.log("DATA SESSION :::::::: ",Skhf.session.datas);
         var usernameMsg = "";
         var hasFieldForUsername=false;
