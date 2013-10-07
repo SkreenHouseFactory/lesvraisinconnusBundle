@@ -65,7 +65,7 @@ $(document).ready(function(){
             + '      <span>Conseil de dernière minute : soigne le son et l\'image, c\'est important</span>'
             + '    </p>'
             + '    <p class="form-group accept">'
-            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1" checked="checked"/>'
+            + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
             + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
             + '    </p>'
             + '  </div>'
@@ -194,7 +194,7 @@ $(document).ready(function(){
             + '  $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<input id="submit_btn" class="btn btn-success valid-btn-inc" type="submit" value="Envoie ! C\'est ton destain !" onClick="$("#vraisinconnus_form").submit()"/><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
+        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="$(\'#vraisinconnus_form\').submit()">Envoie ! C\'est ton destain !</button><input  class="close" data-dismiss="modal" type="button"value="Fermer"/>');
         $('#skModal.modal').modal('show');
       }
     });
