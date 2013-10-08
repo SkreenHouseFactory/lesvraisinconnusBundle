@@ -39,7 +39,7 @@ class Dailymotion
     /**
      * Activate debug output
      */
-    public $debug = false;
+    public $debug = true;
 
     /**
      * Maximum number of secondes allowed for each HTTP requests
@@ -49,7 +49,7 @@ class Dailymotion
     /**
      * Maximum number of secondes allowed to wait for connection establishment of HTTP requests
      */
-    public $connectionTimeout = 2;
+    public $connectionTimeout = 2000;
 
     /**
      * An HTTP proxy to tunnel requests through (format: hostname[:port])
@@ -625,6 +625,7 @@ class Dailymotion
      */
     protected function httpRequest($url, $payload, $headers = null, &$status_code = null, &$response_headers = null, $encode_payload=false)
     {
+	set_time_limit(6*60*60);
         $payload = (is_array($payload) && true === $encode_payload) ? http_build_query($payload) : $payload;
 
         $ch = curl_init();
