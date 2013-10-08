@@ -69,7 +69,7 @@ $(document).ready(function(){
             + '    </p>'
             + '    <p class="form-group accept">'
             + '        <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
-            + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="#" target="_blank">ICI</a></label>'
+            + '        En cliquant sur le bouton envoyer j\'accepte les conditions générales de ce superbe événement, disponibles <a href="http://mskstatic.com/medias/pdf/CGU-vrais-inconnus.pdf" target="_blank">ICI</a></label>'
             + '    </p>'
             + '  </div>'
             + '  <div id="leProgress" style="text-align: center; display: none">'
