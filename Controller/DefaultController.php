@@ -120,8 +120,7 @@ class DefaultController extends Controller
                 'published'=>false, 
                 'tags'=>array("author_" . $userId
               )));
-              echo 'DefaultController::$result => ';
-              print_r($result);
+
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id', $result)) {
                 // La vidéo a bien été uploadée
@@ -130,9 +129,15 @@ class DefaultController extends Controller
                   'sk_id'         => $userId,
                   'video_id'      => $vidId,
                   'title'         => $title,
-                  'description'   => $desc);
-                $api->fetch('vraisInconnus', $params);
-                //echo '$api:'.$api->url;
+                  'description'   => $desc
+                );
+                try {
+                  $api->fetch('vraisInconnus', $params);
+                } catch(Exception $e) {
+                  echo 'DefaultController Exception call API';
+                  echo 'url:'.$api->url. ' params:';
+                  print_r($params);
+                }
                 // Si tout va bien, on crée la fiche programme et on lie à l'utilisateur
                 // On ajoute aussi une notification à l'utilisateur
                 // On envoie un mail à l'utilisateur avec :
