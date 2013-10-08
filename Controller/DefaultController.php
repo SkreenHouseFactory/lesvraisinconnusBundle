@@ -92,8 +92,13 @@ class DefaultController extends Controller
           }
           if ($cgv == 1) {
             $dmApi = new Dailymotion();
-            $dmApi->setGrantType(Dailymotion::GRANT_TYPE_PASSWORD, self::DAILYMOTION_API_KEY, self::DAILYMOTION_API_SECRET, array("manage_videos","write","delete"),
-                                   array('username' => 'lesvraisinconnus', 'password' => 'skfactory'));
+            $dmApi->setGrantType(
+              Dailymotion::GRANT_TYPE_PASSWORD, 
+              self::DAILYMOTION_API_KEY, 
+              self::DAILYMOTION_API_SECRET, 
+              array("manage_videos","write","delete"),
+              array('username' => 'lesvraisinconnus', 'password' => 'skfactory')
+            );
             $session = array();
             // On PUT la vidéo sur Dailymotion
             try
@@ -115,7 +120,8 @@ class DefaultController extends Controller
                 'published'=>false, 
                 'tags'=>array("author_" . $userId
               )));
-
+              echo 'DefaultController::$result => ';
+              print_r($result);
               // On récupère le message réponse de DM
               if (is_array($result) && array_key_exists('id', $result)) {
                 // La vidéo a bien été uploadée
@@ -154,8 +160,12 @@ class DefaultController extends Controller
           $err = self::ERR_FORM;
         }
         if ($err) {
+          print_r($err);
           // Appel API de gestion de l'erreur
-          $params = array('error'=> $err,'sk_id'=>$userId);
+          $params = array(
+            'error'=> $err,
+            'sk_id'=>$userId
+          );
           $api->fetch('vraisInconnus',$params);
           @unlink($filePath);
         }

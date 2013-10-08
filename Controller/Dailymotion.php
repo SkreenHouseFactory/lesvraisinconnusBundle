@@ -39,7 +39,7 @@ class Dailymotion
     /**
      * Activate debug output
      */
-    public $debug = true;
+    public $debug = false;
 
     /**
      * Maximum number of secondes allowed for each HTTP requests
