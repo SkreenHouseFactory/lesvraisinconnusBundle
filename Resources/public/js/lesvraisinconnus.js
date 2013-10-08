@@ -4,7 +4,9 @@ $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
     //L'UTILISATEUR EST PAS CONNECTE
     $('#skModal.modal .modal-title').html(' Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier');
-    $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 !');
+    $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 ! '+
+    '<br/><p style="font-size:12px; margin-top: 10px;"><strong>PUBLIER UNE PARODIE:</strong> <br> Renseignez votre pseudo, donnez un titre &agrave; votre vid&eacute;o et pr&eacute;sentez-la en quelques mots le mieux que vous pouvez. Conseil de derni&egrave;re minute : soignez le son et l&rsquo;image, c&rsquo;est important. </p> '
+);
 
     UI.auth(function() {
       if (Skhf.session.datas.email &&
@@ -12,19 +14,20 @@ $(document).ready(function(){
         console.log("DATA SESSION :::::::: ",Skhf.session.datas);
         var usernameMsg = "";
         var hasFieldForUsername=false;
-        var checkMsg = '<p>PUBLIER UNE PARODIE</p>'
-                     + '<p>Renseignez votre pseudo, donnez un titre &agrave; votre vid&eacute;o et pr&eacute;sentez-la en quelques mots le mieux que vous pouvez. Conseil de derni&egrave;re minute : soignez le son et l&rsquo;image, c&rsquo;est important. </p> '
-                     + ' ';
+        var checkMsg = '';
+            
         if (Skhf.session.datas.username != undefined) {
           usernameMsg = ' <p>'
                       + ' <label for="inputTitle">Votre Pseudo : </label> ' + Skhf.session.datas.username
                       + ' </p>';
         } else {
+
           usernameMsg = ' <p>'
                       + ' <label for="inputTitle">Votre Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
                       + ' <span id="lePseudoMsg"></span>'
                       + ' </p>';
           hasFieldForUsername=true;
+
           checkMsg = 'function checkAvailable(val) {'
                    + ' API.query("GET", "availableUsername.json", {username: val, sk_id: "' + Skhf.session.datas.sk_id + '"}, function(resp){'
                    + ' console.log(resp);'
@@ -42,8 +45,8 @@ $(document).ready(function(){
         }
 
         //L'UTILISATEUR EST CONNECTE
-        $('#skModal.modal .modal-title').html('Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier');
-        $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 !');
+      //  $('#skModal.modal .modal-title').html('Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier');
+    //    $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 !');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
@@ -82,7 +85,7 @@ $(document).ready(function(){
             + ' <div id="leSuccess" style="display: none">'
             + ' <div class="alert alert-success">   F&eacute;licitation Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
             + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com Partagez-la d&egrave;s maintenant avec vos amis pour augmenter vos chances d&rsquo;&ecirc;tre s&eacute;lectionn&eacute; par les Inconnus et passer sur France 2'
-            + ' </p>'
+            + ' </p><br><br> <input  class="close" data-dismiss="modal" type="button"value="Fermer" style="display: inline-block;width: auto;"/>'
             + ' </div>'
             + ' <div id="leError" style="display: none">'
             + ' <div class="alert alert-error" style="background-color: #fcc"><strong>OULA !</strong> Il y a visiblement eu un problème pendant le transfert.</div>'
@@ -95,23 +98,25 @@ $(document).ready(function(){
             + '<script>'
             + ' function validateForm(arr, theForm, options) {'
             + (hasFieldForUsername ? 'var pseudo = arr[0];' : '')
-            + ' var title = arr[' + (hasFieldForUsername ? '1' : '0') + '];'
-            + ' var desc = arr[' + (hasFieldForUsername ? '2' : '1') + '];'
-            + ' var cgv = false; var file = false;'
-            + ' if (arr.length == ' + (hasFieldForUsername ? '5' : '4') + ') {'
-            + ' cgv = true;'
-            + ' file = arr[' + (hasFieldForUsername ? '4' : '3') + '];'
-            + ' } else {'
-            + ' cgv = false;'
-            + ' file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
-            + ' }'
-            + ' var errMsg = "";'
-            + ' var errCount = 0;'
-            + (hasFieldForUsername ? 'if (pseudo.value == "") { errCount++; errMsg += "<br />- il faut renseigner un pseudo valide, sinon comment rendre à César;"; }' : '')
-            + ' if (title.value == "") { errCount++; errMsg += "<br />- il faut renseigner le titre de la vidéo, sinon on ne sait pas de quoi il s\'agit;";}'
-            + ' if (desc.value == "") { errCount++; errMsg += "<br />- il faut décrire un peu sa vidéo, parce que sinon on n\'a que le titre;";}'
+            + '    var title = arr[' + (hasFieldForUsername ? '1' : '0') + '];'
+            + '    var desc = arr[' + (hasFieldForUsername ? '2' : '1') + '];'
+            + '    var cgv = false; var file = false;'
+            //+ '    if (arr.length == ' + (hasFieldForUsername ? '5' : '4') + ') {'
+            + '      console.log(\'arr.length:\', arr.length);'
+            + '      cgv  = true;'
+            + '      file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
+            //+ '    } else {'
+            //+ '      cgv  = false;'
+            //+ '      file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
+            //+ '    }'
+            + '    console.log(\'file.value:\', file, arr, \'hasFieldForUsername:\', '+hasFieldForUsername+');'
+            + '    var errMsg = "";'
+            + '    var errCount = 0;'
+            + (hasFieldForUsername ? 'if (pseudo.value == "") { errCount++; errMsg += "<br />- Il faut renseigner votre pseudo;"; }' : '')
+            + ' if (title.value == "") { errCount++; errMsg += "<br />- il faut donner un titre à la vidéo;";}'
+            + ' if (desc.value == "") { errCount++; errMsg += "<br />- il faut décrire un peu la vidéo;";}'
             + ' if (!cgv) { errCount++; errMsg += "<br />- je sais, c\'est lourd, il faut cocher la case \\\"j\'accepte...\\\"...mais bon, c\'est la loi;";}'
-            + ' if (file.value == "") { errCount++; errMsg += "<br />- ouais...il faut aussi mettre un fichier vidéo, c\'est un peu la base du projet;";}'
+            + ' if (file.value == "") { errCount++; errMsg += "<br />- il faut aussi mettre un fichier vidéo;";}'
             + ' else if (file.value.size > 2*1024*1024*1024) { errCount++; errMsg += "<br />- je suis sûr que la vidéo est top, mais le fichier est trop gros (max. 2 Go);";}'
             + ' if (errCount == 1) { errMsg = "<br />Il y a un problème (sans gravité, heureusement) : " + errMsg; }'
             + ' else if (errCount > 1) { errMsg = "<br />Il y a plusieurs problèmes (sans gravité, heureusement) : " + errMsg; }'
@@ -195,7 +200,7 @@ $(document).ready(function(){
             + ' $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider ! C\'est ton destain !</button><input class="close" data-dismiss="modal" type="button"value="Fermer" style="display: inline-block;width: auto;"/>');
+        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider ! C\'est ton destain !</button>');
         $('#skModal.modal').modal('show');
       }
     });
