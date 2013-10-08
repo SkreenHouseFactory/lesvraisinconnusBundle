@@ -18,11 +18,11 @@ $(document).ready(function(){
                       + '      <label for="inputTitle">Pseudo : </label> ' + Skhf.session.datas.username
                       + '    </p>';
         } else {
+          hasFieldForUsername=true;
           usernameMsg = '    <p>'
                       + '      <label for="inputTitle">Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
                       + '      <span id="lePseudoMsg"></span>'
                       + '    </p>';
-          hasFieldForUsername=true;
           checkMsg = 'function checkAvailable(val) {'
                    + '  API.query("GET", "availableUsername.json", {username: val, sk_id: "' + Skhf.session.datas.sk_id + '"}, function(resp){'
                    + '    console.log(resp);'
@@ -101,13 +101,15 @@ $(document).ready(function(){
             + '    var title = arr[' + (hasFieldForUsername ? '1' : '0') + '];'
             + '    var desc = arr[' + (hasFieldForUsername ? '2' : '1') + '];'
             + '    var cgv = false; var file = false;'
-            + '    if (arr.length == ' + (hasFieldForUsername ? '5' : '4') + ') {'
+            //+ '    if (arr.length == ' + (hasFieldForUsername ? '5' : '4') + ') {'
+            + '      console.log(\'arr.length:\', arr.length);'
             + '      cgv  = true;'
-            + '      file = arr[' + (hasFieldForUsername ? '4' : '3') + '];'
-            + '    } else {'
-            + '      cgv  = false;'
             + '      file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
-            + '    }'
+            //+ '    } else {'
+            //+ '      cgv  = false;'
+            //+ '      file = arr[' + (hasFieldForUsername ? '3' : '2') + '];'
+            //+ '    }'
+            + '    console.log(\'file.value:\', file, arr, \'hasFieldForUsername:\', '+hasFieldForUsername+');'
             + '    var errMsg = "";'
             + '    var errCount = 0;'
             + (hasFieldForUsername ? 'if (pseudo.value == "") { errCount++; errMsg += "<br />- il faut renseigner un pseudo valide, sinon comment rendre à César;"; }' : '')

@@ -64,6 +64,7 @@ class DefaultController extends Controller
       // Modifications configuration PHP pour accepter fichiers larges
       set_time_limit(6*60*60);
       $fileName = null; // Initialisation de la variable.
+      $filePath = null;
       // On récupère le myskreener_id
       $session_uid = $request->cookies->get('myskreen_session_uid');
       if ($session_uid) {
@@ -98,14 +99,15 @@ class DefaultController extends Controller
             try
             {
               // On déplace le fichier pour qu'il soit public sur une URL (attention, on vire les espaces, DM n'aime pas du tout !!)
-
-              $fileName = $this->get('kernel')->getRootDir() . '/../web'.self::UPLOAD_PATH . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
-              $fileUrl = 'http://'.$this->getHost($request) . str_replace(" ","_",$_FILES["lvi_file"]["name"]);
+              $fileName = date('YmdHis').'----'.skRewriter::make($_FILES["lvi_file"]["name"], '-', array('.'));
+              $filePath = $this->get('kernel')->getRootDir() . '/../web'.self::UPLOAD_PATH . $fileName;
+              $fileUrl = 'http://'.$this->getHost($request) . $fileName;
               
               //echo '$fileName:'.$fileName;
+              //echo '$filePath:'.$filePath;
               //echo '$fileUrl:'.$fileUrl;
               
-              move_uploaded_file($_FILES["lvi_file"]["tmp_name"],$fileName);
+              move_uploaded_file($_FILES["lvi_file"]["tmp_name"], $filePath);
               $result = $dmApi->post('/me/videos', array(
                 'url' => $fileUrl, 
                 'title' => $title, 
@@ -115,7 +117,7 @@ class DefaultController extends Controller
               )));
 
               // On récupère le message réponse de DM
-              if (is_array($result) && array_key_exists('id',$result)) {
+              if (is_array($result) && array_key_exists('id', $result)) {
                 // La vidéo a bien été uploadée
                 $vidId = $result['id'];
                 $params = array(
@@ -155,16 +157,16 @@ class DefaultController extends Controller
           // Appel API de gestion de l'erreur
           $params = array('error'=> $err,'sk_id'=>$userId);
           $api->fetch('vraisInconnus',$params);
-          @unlink($fileName);
+          @unlink($filePath);
         }
         exit;
       } else {
         // Si on n'est pas dans un POST, on redirige vers la page d'accueil
         throw $this->createNotFoundException('Cette URL ne mène visiblement nulle part...');
-        @unlink($fileName);
+        @unlink($filePath);
         exit;
       }
-      @unlink($fileName);
+      @unlink($filePath);
       exit;
     }
   
@@ -219,5 +221,262 @@ class DefaultController extends Controller
                     . '&web=' . ($DM_UPLOAD_WEB ? 1 : 0) . '&webcam=' . ($DM_UPLOAD_WEBCAM ? 1 : 0) . '"></iframe>';
 
       return $this->render('SkreenHouseFactorylesVraisInconnusBundle:Default:index.html.twig', array('uploader'=>$dmIframeCode));
+    }
+}
+
+
+
+
+/**
+* Réécriture d'URL
+*
+* @author   Benoît Bergstörm    <benoit@skreenhouse.com>
+*
+* @param    string $replace     Liste des caractère à remplacer
+* @param    string $erase       Liste des caractère à effacer
+*/
+
+class skRewriter
+{
+    protected static $cache   = array();
+    protected static $replace = array( '\'', '“', '”', '%', '/', '\\', '_', '-', '&', '+', '.', '=', '–', '…', '|' );
+
+    protected static $erase   = array( '&ndash', '§', '(', ')', '[', ']', '¡', '', '!', '?',
+                                       '¿', ':', ';', '¢', 'þ', '¤', '#', ',', '*', '<', '>',
+                                       '«', '»', '°', 'º', '"', '–', '¹', '²', '³', '’',
+                                       '›', '…', '–' );
+
+    public static function slug($str)
+    {
+      return self::make($str, '-', array('+'));
+    }
+
+    /**
+    * bad encoding for 20minutes DM
+    *
+    */
+    public static function hack($str)
+    {
+      $str = urldecode(str_replace(array('a%CC%80', 'e%CC%81', '%E2%80%A6', '%C5%93o', '%E2%80%99', '%E2%80%93', '%C5%99', '%C5%92', '%C2%85'), 
+                                   array('à', 'é', ' ', 'o', '\'', ' ', ' ', 'oe', ''), 
+                                   urlencode($str)));
+
+      return $str;
+    }
+
+    /**
+    * Réécrit une chaine pour une URL
+    *
+    * @author   Benoît Bergstörm    <benoit@skreenhouse.com>
+    *
+    * @param    string  $str        Chaine à réécrire
+    * @param    string  $separator  Séparateur de mots
+    * @param    array   $keep       Caractères non-modifiables
+    *
+    * @return   string  $url        La chaine réécrite
+    */
+
+    /*
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!!
+
+    InfodocPeer::getCachePlayerExporte et UrlRewriter::make sont copiées dans plugins/skPlayerExportePlugin/json.php
+
+    ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!! ATTENTION !!!! WARNING !!!!
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    */
+
+    public static function make( $str, $separator = '-', $keep = array() )
+    {
+        if (is_array($str)) { //prevent
+          $str = implode($separator, $str);
+        }
+
+        //pseudo-cache
+        if (isset(self::$cache[md5($str.$separator)])) {
+          return self::$cache[md5($str.$separator)];
+        }
+
+        //$current_encoding = mb_detect_encoding($str, 'auto');
+        //echo "\ns:".mb_convert_encoding($str,'UTF-8',mb_detect_encoding($str));
+        //$str=Encoding::fixUTF8($str);
+        //echo "\nstr:$str utf8_decode:". Encoding::toUTF8($str);//iconv($current_encoding, 'UTF-8', $str);
+
+        // On reviendra à str si la réécriture aboutit à une chaîne vide
+        $url = self::hack($str);
+
+        // Modification de la casse
+
+        if ( !in_array( 'uppercase', $keep ) )
+        {
+            $url = strtolower( $url );
+        }
+
+        // Efface et remplace
+
+        $url = str_replace( array_diff( self::$erase, $keep ), '', $url );
+        $url = str_replace( array_diff( self::$replace, $keep), $separator, $url );
+
+        // Remplacements divers
+
+        if ( !in_array( '@', $keep ) )
+        {
+            $url = str_replace( '@', 'a', $url );
+        }
+
+        if ( !in_array( '+', $keep ) )
+        {
+            $url = str_replace( '+', 'plus', $url );
+        }
+
+        // Remplacements au cas par cas
+
+        $url = str_replace( '$', 'dollar'.$separator, $url );
+        $url = str_replace( '€', 'euro'.$separator, $url );
+
+        $url = str_replace( 'Å', 'A', $url );
+        $url = str_replace( 'Ä', 'A', $url );
+        $url = str_replace( 'Â', 'A', $url );
+        $url = str_replace( 'Á', 'A', $url );
+        $url = str_replace( 'Ã', 'A', $url );
+        $url = str_replace( 'À', 'A', $url );
+        $url = str_replace( 'ã', 'a', $url );
+        $url = str_replace( 'á', 'a', $url );
+        $url = str_replace( 'à', 'a', $url );
+        $url = str_replace( 'â', 'a', $url );
+        $url = str_replace( 'ä', 'a', $url );
+        $url = str_replace( 'å', 'a', $url );
+        $url = str_replace( 'â', 'a', $url );
+        $url = str_replace( 'ÿ', 'y', $url );
+        $url = str_replace( 'Ÿ', 'y', $url );
+        $url = str_replace( 'Ì', 'I', $url );
+        $url = str_replace( 'Ï', 'I', $url );
+        $url = str_replace( 'Í', 'I', $url );
+        $url = str_replace( 'Î', 'I', $url );
+        $url = str_replace( 'í', 'i', $url );
+        $url = str_replace( 'î', 'i', $url );
+        $url = str_replace( 'ì', 'i', $url );
+        $url = str_replace( 'í', 'i', $url );
+        $url = str_replace( 'ï', 'i', $url );
+        $url = str_replace( 'Ê', 'E', $url );
+        $url = str_replace( 'È', 'E', $url );
+        $url = str_replace( 'É', 'E', $url );
+        $url = str_replace( 'Ë', 'E', $url );
+        $url = str_replace( 'E', 'e', $url );
+        $url = str_replace( 'ë', 'e', $url );
+        $url = str_replace( 'è', 'e', $url );
+        $url = str_replace( 'é', 'e', $url );
+        $url = str_replace( 'ê', 'e', $url );
+        $url = str_replace( 'è', 'e', $url );
+        $url = str_replace( 'Ò', 'O', $url );
+        $url = str_replace( 'Ó', 'O', $url );
+        $url = str_replace( 'Ô', 'O', $url );
+        $url = str_replace( 'Õ', 'O', $url );
+        $url = str_replace( 'Ö', 'O', $url );
+        $url = str_replace( 'ó', 'o', $url );
+        $url = str_replace( 'õ', 'o', $url );
+        $url = str_replace( 'ð', 'o', $url );
+        $url = str_replace( 'ô', 'o', $url );
+        $url = str_replace( 'ö', 'o', $url );
+        $url = str_replace( 'ò', 'o', $url );
+        $url = str_replace( 'Ú', 'U', $url );
+        $url = str_replace( 'Û', 'U', $url );
+        $url = str_replace( 'Ù', 'U', $url );
+        $url = str_replace( 'ù', 'u', $url );
+        $url = str_replace( 'û', 'u', $url );
+        $url = str_replace( 'ú', 'u', $url );
+        $url = str_replace( 'ü', 'u', $url );
+        $url = str_replace( 'Ü', 'U', $url );
+        $url = str_replace( 'Ò', 'O', $url );
+        $url = str_replace( 'Ó', 'O', $url );
+        $url = str_replace( 'Ô', 'O', $url );
+        $url = str_replace( 'Õ', 'O', $url );
+        $url = str_replace( 'Ö', 'O', $url );
+        $url = str_replace( 'ó', 'o', $url );
+        $url = str_replace( 'õ', 'o', $url );
+        $url = str_replace( 'ð', 'o', $url );
+        $url = str_replace( 'ô', 'o', $url );
+        $url = str_replace( 'ö', 'o', $url );
+        $url = str_replace( 'ò', 'o', $url );
+        $url = str_replace( 'Ú', 'U', $url );
+        $url = str_replace( 'Û', 'U', $url );
+        $url = str_replace( 'Ù', 'U', $url );
+        $url = str_replace( 'ù', 'u', $url );
+        $url = str_replace( 'û', 'u', $url );
+        $url = str_replace( 'ú', 'u', $url );
+        $url = str_replace( 'ü', 'u', $url );
+        $url = str_replace( 'Ü', 'U', $url );
+        $url = str_replace( 'ç', 'c', $url );
+        $url = str_replace( 'Ç', 'C', $url );
+        $url = str_replace( 'ñ', 'n', $url );
+        $url = str_replace( 'Ñ', 'N', $url );
+        $url = str_replace( 'ý', 'y', $url );
+        $url = str_replace( 'ø', 'o', $url );
+        $url = str_replace( 'ß', 'ss', $url );
+        $url = str_replace( 'æ', 'ae', $url );
+        $url = str_replace( 'Æ', 'ae', $url );
+        $url = str_replace( 'œ', 'oe', $url );
+        $url = str_replace( 'Œ', 'oe', $url );
+        $url = str_replace( '½', 'et-demi', $url );
+
+        // Traitement des espaces
+        $url = trim( $url );
+        $url = str_replace( ' ', $separator, $url );
+ 
+ 			 	// __ => start protect spaces
+				$url = str_replace(' ', '__', $url);
+
+        // Espace insécable
+        $url = urldecode( str_replace( '%C2%A0', $separator, urlencode( $url ) ) );
+
+        // unicode, après les replaces : __ => protect spaces
+        if (count($keep) == 0) { //ne marche pas avec keep ! => + >>
+          $url = preg_replace('/\%[A-Z0-9]{2}/i', '', urlencode($url));
+        }
+ 
+ 			 	// __ => end protect spaces
+				$url = str_replace('__', ' ', $url);
+
+        // Gestion des incohérences du traitement
+        $url = str_replace( $separator.$separator.$separator, $separator, $url );
+        $url = str_replace( $separator.$separator, $separator, $url );
+
+        // Caractère '10' (= New Line en ASCII)
+        // Bug -> caractère affiché comme un espace mais pas remplacé, posait un problème dans le routing pour le sitemap
+        $url = str_replace( chr( 10 ), $separator, $url );
+        
+        // hack bug utf8
+        //echo utf8_decode($url);
+        //$url = str_replace('\u', '_UNICODE_', $url);
+        //$url = preg_replace('/_UNICODE_(\d+)/i', '', $url);
+        //$url = urldecode(str_replace( array('%C2%92','%C2%8C','%C2%9C','%E2%80%9E','%C2%96'), array($separator,'oe',''), urlencode($url) ));
+        
+        
+        //un petit dernier strtolower pour la route si on a remplacé des caracteres avant
+        if ( !in_array( 'uppercase', $keep ) ) {
+            $url = strtolower( $url );
+        }
+
+        // Retour à la chaine originale si échec réécriture
+        if ( !$url ) {
+            $url = $str;
+        }
+
+        if ( substr( $url, 0, 1 ) == $separator ) {
+            $url = substr( $url, 1, strlen( $url ) );
+        }
+
+        if ( substr( $url, ( strlen( $url ) - 1 ), 1 ) == $separator ) {
+            $url = substr( $url, 0, ( strlen( $url ) - 1 ) );
+        }
+
+        //mise en cache
+        self::$cache[md5($str.$separator)] = $url;
+
+        return $url;
     }
 }
