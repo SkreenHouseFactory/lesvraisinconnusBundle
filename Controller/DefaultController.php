@@ -77,6 +77,7 @@ class DefaultController extends Controller
       $userId = $userDatas->sk_id;
       if ($request->getMethod() === "POST") {
         $err = false;
+
         // On vérifie qu'on a bien un form complet
         if (array_key_exists('lvi_title',$_POST) && 
             array_key_exists('lvi_desc',$_POST) && 
@@ -117,8 +118,8 @@ class DefaultController extends Controller
                 'url' => $fileUrl, 
                 'title' => $title, 
                 'description' => $desc, 
-                'published'=>false, 
-                'tags'=>array("author_" . $userId
+                'published' => false, 
+                'tags' => array("author_" . $userId
               )));
 
               // On récupère le message réponse de DM
@@ -165,7 +166,7 @@ class DefaultController extends Controller
           $err = self::ERR_FORM;
         }
         if ($err) {
-          print_r($err);
+          echo 'ERR:'.$err;
           // Appel API de gestion de l'erreur
           $params = array(
             'error'=> $err,

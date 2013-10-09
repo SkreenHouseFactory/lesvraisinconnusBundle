@@ -65,13 +65,13 @@ $(document).ready(function(){
             + ' <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description" style="height:60px;"/>'
             + ' </p>'
             + ' <p class="form-group">'
-            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" style="position: absolute;" onChange="displayFileInfo();">'
+            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
             + ' <span class="btn btn-large btn-info fileinput-button">'
             + ' '
             + ' <span>(Taille maximum 2 Go)</span>'
             + ' </span>'
             + ' <div id="fileInfo" class="alert alert-info" style="display:none"></div>'
-            + ' </p>'
+            + ' </p><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
             + ' <p class="form-group accept">'
             + ' </p>'
             + ' </div>'
@@ -200,7 +200,7 @@ $(document).ready(function(){
             + '</script>');
 
         $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider, c\'est ton destain !</button>'
-        + '<br><label id="labelfilou"for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
+        + '<br><label id="labelfilou"for="inputCgv" style="font-weight: normal; font-size: 12px;">'
         + '     En cliquant sur valider, vous acceptez <a href="http://mskstatic.com/medias/pdf/CGU-vrais-inconnus.pdf" target="_blank">les conditions g&eacute;n&eacute;rales et les r&egrave;gles de diffusion</a></label>');
         $('#skModal.modal').modal('show');
       }
