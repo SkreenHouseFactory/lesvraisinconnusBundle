@@ -65,7 +65,7 @@ $(document).ready(function(){
             + ' <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description" style="height:60px;"/>'
             + ' </p>'
             + ' <p class="form-group">'
-            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" style="position: absolute;" onChange="displayFileInfo();">'
+            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" onChange="displayFileInfo();">'
             + ' <span class="btn btn-large btn-info fileinput-button">'
             + ' '
             + ' <span>(Taille maximum 2 Go)</span>'
