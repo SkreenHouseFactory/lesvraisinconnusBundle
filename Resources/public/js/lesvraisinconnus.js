@@ -2,10 +2,11 @@
 /*global window, $ */
 $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
+     $(".modal-footer").css("display","block"); 
     //L'UTILISATEUR EST PAS CONNECTE
-    $('#skModal.modal .modal-title').html(' Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier');
-    $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 ! '+
-    '<br/><p style="font-size:12px; margin-top: 10px;"><strong>PUBLIER UNE PARODIE:</strong> <br> Renseignez votre pseudo, donnez un titre &agrave; votre vid&eacute;o et pr&eacute;sentez-la en quelques mots le mieux que vous pouvez. Conseil de derni&egrave;re minute : soignez le son et l&rsquo;image, c&rsquo;est important. </p> '
+    $('#skModal.modal .modal-title').html(' ');
+    $('#skModal.modal .modal-message').html('Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier. <br> Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 ! '+
+    '    '
 );
 
     UI.auth(function() {
@@ -45,8 +46,8 @@ $(document).ready(function(){
         }
 
         //L'UTILISATEUR EST CONNECTE
-      //  $('#skModal.modal .modal-title').html('Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier');
-    //    $('#skModal.modal .modal-message').html('Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 !');
+        $('#skModal.modal .modal-title').html('PUBLIER UNE PARODIE');
+        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots, le mieux que vous pouvez. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
@@ -64,16 +65,14 @@ $(document).ready(function(){
             + ' <textarea class="form-control" id="inputDesc" name="lvi_desc" placeholder="La description" style="height:60px;"/>'
             + ' </p>'
             + ' <p class="form-group">'
-            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" style="position: absolute; opacity: 0;" onChange="displayFileInfo();">'
+            + ' <input class="form-control" id="fileupload" type="file" name="lvi_file" style="position: absolute;" onChange="displayFileInfo();">'
             + ' <span class="btn btn-large btn-info fileinput-button">'
-            + ' <i class="glyphicon glyphicon-plus"></i>'
+            + ' '
             + ' <span>(Taille maximum 2 Go)</span>'
             + ' </span>'
             + ' <div id="fileInfo" class="alert alert-info" style="display:none"></div>'
             + ' </p>'
             + ' <p class="form-group accept">'
-            + ' <label for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
-            + '     En cliquant sur valider, vous acceptez <a href="http://mskstatic.com/medias/pdf/CGU-vrais-inconnus.pdf" target="_blank">les conditions g&eacute;n&eacute;rales et les r&egrave;gles de diffusion</a></label>'
             + ' </p>'
             + ' </div>'
             + ' <div id="leProgress" style="text-align: center; display: none">'
@@ -84,8 +83,8 @@ $(document).ready(function(){
             + ' </div>'
             + ' <div id="leSuccess" style="display: none">'
             + ' <div class="alert alert-success">   F&eacute;licitation Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
-            + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com Partagez-la d&egrave;s maintenant avec vos amis pour augmenter vos chances d&rsquo;&ecirc;tre s&eacute;lectionn&eacute; par les Inconnus et passer sur France 2'
-            + ' </p><br><br> <input  class="close" data-dismiss="modal" type="button"value="Fermer" style="display: inline-block;width: auto;"/>'
+            + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com <br><br>Dès réception du mail de confirmation, vous pourrez retrouver votre vidéo en cliquant sur le lien. <br><br>Partagez-la d&egrave;s maintenant avec vos amis pour augmenter vos chances d&rsquo;&ecirc;tre s&eacute;lectionn&eacute; par les Inconnus et passer sur France 2'
+            + ' </p><br>Merci de votre participation.<br><br> <input  class="close" data-dismiss="modal" type="button"value="Revenir au site" style="display: inline-block;width: auto;"/>'
             + ' </div>'
             + ' <div id="leError" style="display: none">'
             + ' <div class="alert alert-error" style="background-color: #fcc"><strong>OULA !</strong> Il y a visiblement eu un problème pendant le transfert.</div>'
@@ -135,21 +134,21 @@ $(document).ready(function(){
             + ''
             + ' function showProgress(e, position, total, percentComplete) {'
             + ' console.log("ON UPDATE LA PROGRESS BAR : " + percentComplete);'
-            + ' $("#submit_btn").css("opacity","0.1").attr("disabled","disabled");'
+            + ' $(".modal-footer").css("display","none");'
             + ' $("#progress .progress-bar").css("width",percentComplete + "%");'
-            + ' if (percentComplete > 97) { $("#progressStatus").html("eh ben, c\'est pas dommage...")}'
+            + ' if (percentComplete > 97) { $("#progressStatus").html(" et on y est...")}'
             + ' else if (percentComplete > 84) { $("#progressStatus").html("plus que "+(100 - percentComplete)+"% et on y est...")}'
             + ' else if (percentComplete > 75) { $("#progressStatus").html("(" + percentComplete + "%) on arrive bientôt au bout...")}'
-            + ' else if (percentComplete > 70) { $("#progressStatus").html("(" + percentComplete + "%) j\'espère que c\'est drôle...")}'
-            + ' else if (percentComplete > 65) { $("#progressStatus").html("(" + percentComplete + "%) wow ! sacré fichier...")}'
-            + ' else if (percentComplete > 60) { $("#progressStatus").html("(" + percentComplete + "%) ...de pourir de la peur du plaisir...")}'
-            + ' else if (percentComplete > 55) { $("#progressStatus").html("(" + percentComplete + "%) ...du désir de la mort...")}'
-            + ' else if (percentComplete > 50) { $("#progressStatus").html("(" + percentComplete + "%) cette attente, c\'est le plaisir de la peur...")}'
-            + ' else if (total > 17*1024*1024 && percentComplete > 46) { $("#progressStatus").html("(" + percentComplete + "%) ...et tout deviendra clair...")}'
-            + ' else if (total > 17*1024*1024 && percentComplete > 40) { $("#progressStatus").html("(" + percentComplete + "%) ...hypochondriaque...")}'
-            + ' else if (total > 17*1024*1024 && percentComplete > 34) { $("#progressStatus").html("(" + percentComplete + "%) ...sinusoïdale de l\'anachorète...")}'
-            + ' else if (total > 17*1024*1024 && percentComplete > 28) { $("#progressStatus").html("(" + percentComplete + "%) être ou ne pas être, telle est la question...")}'
-            + ' else if (percentComplete > 23) { $("#progressStatus").html("(" + percentComplete + "%) envoi du fichier en cours...")}'
+            + ' else if (percentComplete > 70) { $("#progressStatus").html("(" + percentComplete + "%) on espère que c\'est drôle...")}'
+            + ' else if (percentComplete > 65) { $("#progressStatus").html("(" + percentComplete + "%) on espère que c\'est drôle...")}'
+            + ' else if (percentComplete > 60) { $("#progressStatus").html("(" + percentComplete + "%) on espère que c\'est drôle...")}'
+            + ' else if (percentComplete > 55) { $("#progressStatus").html("(" + percentComplete + "%) wow ! sacré fichier...")}'
+            + ' else if (percentComplete > 50) { $("#progressStatus").html("(" + percentComplete + "%) wow ! sacré fichier...")}'
+            + ' else if (total > 17*1024*1024 && percentComplete > 46) { $("#progressStatus").html("(" + percentComplete + "%) wow ! sacré fichier...")}'
+            + ' else if (total > 17*1024*1024 && percentComplete > 40) { $("#progressStatus").html("(" + percentComplete + "%) plus le fichier est lourd, plus c\'est long...")}'
+            + ' else if (total > 17*1024*1024 && percentComplete > 34) { $("#progressStatus").html("(" + percentComplete + "%) plus le fichier est lourd, plus c\'est long...")}'
+            + ' else if (total > 17*1024*1024 && percentComplete > 28) { $("#progressStatus").html("(" + percentComplete + "%) plus le fichier est lourd, plus c\'est long...")}'
+            + ' else if (percentComplete > 23) { $("#progressStatus").html("(" + percentComplete + "%) plus le fichier est lourd, plus c\'est long...")}'
             + ' else if (percentComplete > 15) { $("#progressStatus").html("(" + percentComplete + "%) plus le fichier est lourd, plus c\'est long...")}'
             + ' else if (percentComplete > 0) { $("#progressStatus").html("(" + percentComplete + "%) envoi du fichier en cours...")}'
             + ' }'
@@ -200,7 +199,9 @@ $(document).ready(function(){
             + ' $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider ! C\'est ton destain !</button>');
+        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider, c\'est ton destain !</button>'
+        + '<br><label id="labelfilou"for="inputCgv" style="font-weight: normal; font-size: 12px;"><input type="hidden" id="inputCgv" name="lvi_cgv" value="1"/>'
+        + '     En cliquant sur valider, vous acceptez <a href="http://mskstatic.com/medias/pdf/CGU-vrais-inconnus.pdf" target="_blank">les conditions g&eacute;n&eacute;rales et les r&egrave;gles de diffusion</a></label>');
         $('#skModal.modal').modal('show');
       }
     });
