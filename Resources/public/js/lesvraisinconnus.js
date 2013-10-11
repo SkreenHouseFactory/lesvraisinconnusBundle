@@ -50,7 +50,7 @@ $(document).ready(function(){
         $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
-            + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
+            + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/_lesvraisinconnusbundle/done" enctype="multipart/form-data">'
             + ' <div id="leForm">'
             + ' <div id="alert_msg" class="alert alert-danger alert-block" style="display: none;">'
             + ' <strong>Aïe !</strong>'
