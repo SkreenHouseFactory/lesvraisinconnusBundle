@@ -5,7 +5,7 @@ $(document).ready(function(){
      $(".modal-footer").css("display","block"); 
     //L'UTILISATEUR EST PAS CONNECTE
     $('#skModal.modal .modal-title').html(' ');
-    $('#skModal.modal .modal-message').html('Vous aussi, envoyez votre parodie, c\'est gratuit, il suffit de vous identifier. <br> Si elle pla&icirc;t aux Inconnus, elle sera peut-&ecirc;tre diffus&eacute;e sur France 2 ! '+
+    $('#skModal.modal .modal-message').html('Pour nous envoyer votre parodie, créez d\’abord un compte ou connectez-vous sur votre compte myskreen en 1 clic. C\’est rapide et gratuit.'+
     '    '
 );
 
@@ -83,7 +83,7 @@ $(document).ready(function(){
             + ' </div>'
             + ' <div id="leSuccess" style="display: none">'
             + ' <div class="alert alert-success">   F&eacute;licitation Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
-            + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com <br><br>Dès réception du mail de confirmation, vous pourrez retrouver votre vidéo en cliquant sur le lien. <br><br>Partagez-la d&egrave;s maintenant avec vos amis pour augmenter vos chances d&rsquo;&ecirc;tre s&eacute;lectionn&eacute; par les Inconnus et passer sur France 2'
+            + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com <br><br>Vous recevrez un lien par mail dès qu\’elle sera validée.Vous pourrez alors partager votre vidéo : plus elle sera vue, plus elle aura de chance d\’être sélectionnée par Les Inconnus et passer sur France 2 !'
             + ' </p><br>Merci de votre participation.<br><br> <input  class="close" data-dismiss="modal" type="button"value="Revenir au site" style="display: inline-block;width: auto;"/>'
             + ' </div>'
             + ' <div id="leError" style="display: none">'
@@ -174,18 +174,7 @@ $(document).ready(function(){
             + ' }'
             + ''
             + ' function displayFileInfo() { '
-            + ' var path = $("#fileupload").val();'
-            + ' var idx = Math.max(path.lastIndexOf("/"),path.lastIndexOf("\\\\")) + 1;'
-            + ' var name = path.substr(idx);'
-            + ' if (name != "") {'
-            + ' $("#fileInfo").html("Vidéo sélectionnée : " + name).show();'
-            + ' $(".fileinput-button").removeClass("btn-info").addClass("btn-success"); '
-            + ' $(".fileinput-button i").removeClass("glyphicon-plus").addClass("glyphicon-ok"); '
-            + ' } else {'
-            + ' $("#fileInfo").html("");'
-            + ' $(".fileinput-button").removeClass("btn-success").addClass("btn-info"); '
-            + ' $(".fileinput-button i").removeClass("glyphicon-ok").addClass("glyphicon-plus"); '
-            + ' }'
+            + ' $("#fileupload").css("background-color", "#9ce48d"); '
             + ' }'
             + ''
             + ' var formOptions = {'
@@ -199,7 +188,7 @@ $(document).ready(function(){
             + ' $("#vraisinconnus_form").ajaxForm(formOptions);'
             + '</script>');
 
-        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valider, c\'est ton destain !</button>'
+        $('#skModal.modal .modal-footer').html('<button id="submit_btn" class="btn btn-success valid-btn-inc" onClick="if (!$(this).attr(\'disabled\')) $(\'#vraisinconnus_form\').submit() ">Valide, c\'est ton destain !</button>'
         + '<br><label id="labelfilou"for="inputCgv" style="font-weight: normal; font-size: 12px;">'
         + '     En cliquant sur valider, vous acceptez <a href="http://mskstatic.com/medias/pdf/CGU-vrais-inconnus.pdf" target="_blank">les conditions g&eacute;n&eacute;rales et les r&egrave;gles de diffusion</a></label>');
         $('#skModal.modal').modal('show');
