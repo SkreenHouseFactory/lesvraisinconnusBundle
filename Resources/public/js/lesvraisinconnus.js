@@ -24,7 +24,7 @@ $(document).ready(function(){
         } else {
 
           usernameMsg = ' <p>'
-                      + ' <label for="inputTitle">Votre Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
+                      + ' <label for="inputTitle">Votre Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Pseudo"/>'
                       + ' <span id="lePseudoMsg"></span>'
                       + ' </p>';
           hasFieldForUsername=true;
@@ -47,7 +47,7 @@ $(document).ready(function(){
 
         //L'UTILISATEUR EST CONNECTE
         $('#skModal.modal .modal-title').html('PUBLIER UNE PARODIE');
-        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots, le mieux que vous pouvez. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
+        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/lesvraisinconnus/done" enctype="multipart/form-data">'
@@ -82,7 +82,7 @@ $(document).ready(function(){
             + ' </div>'
             + ' </div>'
             + ' <div id="leSuccess" style="display: none">'
-            + ' <div class="alert alert-success">   F&eacute;licitation Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
+            + ' <div class="alert alert-success">   F&eacute;licitations ! Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
             + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com <br><br>Vous recevrez un lien par mail dès qu\’elle sera validée.Vous pourrez alors partager votre vidéo : plus elle sera vue, plus elle aura de chance d\’être sélectionnée par Les Inconnus et passer sur France 2 !'
             + ' </p><br>Merci de votre participation.<br><br> <input  class="close" data-dismiss="modal" type="button"value="Revenir au site" style="display: inline-block;width: auto;"/>'
             + ' </div>'
