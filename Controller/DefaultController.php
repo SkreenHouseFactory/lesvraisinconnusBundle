@@ -16,12 +16,12 @@ class DefaultController extends Controller
 {
 
 // PROD  
-    const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
-    const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
+    // const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
+    // const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
 
 // DEV
-//    const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
-//    const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
+   const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
+   const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
 
     const UPLOAD_PATH     = '/uploads/DM/';
 
@@ -33,6 +33,7 @@ class DefaultController extends Controller
   
     public function indexAction(Request $request)
     {
+
       $session_uid = $request->cookies->get('myskreen_session_uid');
 
       if ($session_uid) {
@@ -61,12 +62,15 @@ class DefaultController extends Controller
     }
 
     public function doneAction(Request $request) {
+
       // Modifications configuration PHP pour accepter fichiers larges
       set_time_limit(6*60*60);
       $fileName = null; // Initialisation de la variable.
       $filePath = null;
       // On récupère le myskreener_id
       $session_uid = $request->cookies->get('myskreen_session_uid');
+            // mail("yann@myskreen.com", "DailyMotion", "Message :done".$session_uid);
+            // echo "1";
       if ($session_uid) {
         $api = $this->get('api');
         $userDatas = $api->fetch('session/settings/'.$session_uid);
@@ -75,8 +79,10 @@ class DefaultController extends Controller
         return $this->redirect('http://www.myskreen.com');
       }
       $userId = $userDatas->sk_id;
+      // echo "2";
       if ($request->getMethod() === "POST") {
         $err = false;
+// echo "3";
 
         // On vérifie qu'on a bien un form complet
         if (array_key_exists('lvi_title',$_POST) && 
@@ -92,14 +98,17 @@ class DefaultController extends Controller
             $api->fetch('updateUsername', array('sk_id' => $userId, 'username' => $_POST['lvi_pseudo']));
           }
           if ($cgv == 1) {
+   // echo "4";
             $dmApi = new Dailymotion();
             $dmApi->setGrantType(
               Dailymotion::GRANT_TYPE_PASSWORD, 
               self::DAILYMOTION_API_KEY, 
               self::DAILYMOTION_API_SECRET, 
               array("manage_videos","write","delete"),
-              array('username' => 'lesvraisinconnus', 'password' => 'skfactory')
+              array('username' => 'lesvraisinconnus', 'password' => 'bangme24')
             );
+
+           // echo $dmApi;
             $session = array();
             // On PUT la vidéo sur Dailymotion
             try
