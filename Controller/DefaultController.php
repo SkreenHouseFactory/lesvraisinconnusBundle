@@ -15,14 +15,6 @@ ini_set('upload_max_filesize', '2048M');
 class DefaultController extends Controller
 {
 
-// PROD  
-    // const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
-    // const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
-
-// DEV
-   const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
-   const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
-
     const UPLOAD_PATH     = '/uploads/DM/';
 
     const ERR_FORM        = 1;
@@ -102,10 +94,10 @@ class DefaultController extends Controller
             $dmApi = new Dailymotion();
             $dmApi->setGrantType(
               Dailymotion::GRANT_TYPE_PASSWORD, 
-              self::DAILYMOTION_API_KEY, 
-              self::DAILYMOTION_API_SECRET, 
+              $this->container->getParameter('dailymotion_api_key'), 
+              $this->container->getParameter('dailymotion_api_secret'), 
               array("manage_videos","write","delete"),
-              array('username' => 'lesvraisinconnus', 'password' => 'bangme24')
+              array('username' => $this->container->getParameter('dailymotion_username'), 'password' => $this->container->getParameter('dailymotion_password'))
             );
 
            // echo $dmApi;
