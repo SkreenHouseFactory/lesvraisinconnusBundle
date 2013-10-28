@@ -24,7 +24,7 @@ $(document).ready(function(){
         } else {
 
           usernameMsg = ' <p>'
-                      + ' <label for="inputTitle">Votre Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Choisis ton pseudo"/>'
+                      + ' <label for="inputTitle">Votre Pseudo : </label> <input class="form-control" id="lePseudo" type="text" onBlur="javascript: checkAvailable(this.value);" name="lvi_pseudo" placeholder="Pseudo"/>'
                       + ' <span id="lePseudoMsg"></span>'
                       + ' </p>';
           hasFieldForUsername=true;
@@ -44,10 +44,9 @@ $(document).ready(function(){
                    + ' });'
                    + '}';
         }
-
         //L'UTILISATEUR EST CONNECTE
         $('#skModal.modal .modal-title').html('PUBLIER UNE PARODIE');
-        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots, le mieux que vous pouvez. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
+        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/_lesvraisinconnusbundle/done" enctype="multipart/form-data">'
@@ -82,15 +81,17 @@ $(document).ready(function(){
             + ' </div>'
             + ' </div>'
             + ' <div id="leSuccess" style="display: none">'
-            + ' <div class="alert alert-success">   F&eacute;licitation Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
+            + ' <div class="alert alert-success">F&eacute;licitations ! Votre parodie a bien &eacute;t&eacute; envoy&eacute;e. </div>'
             + ' <p>Apr&egrave;s validation par nos &eacute;quipes, votre vid&eacute;o sera publi&eacute;e sur myskreen.com <br><br>Vous recevrez un lien par mail dès qu\’elle sera validée.Vous pourrez alors partager votre vidéo : plus elle sera vue, plus elle aura de chance d\’être sélectionnée par Les Inconnus et passer sur France 2 !'
             + ' </p><br>Merci de votre participation.<br><br> <input  class="close" data-dismiss="modal" type="button"value="Revenir au site" style="display: inline-block;width: auto;"/>'
             + ' </div>'
             + ' <div id="leError" style="display: none">'
-            + ' <div class="alert alert-error" style="background-color: #fcc"><strong>OULA !</strong> Il y a visiblement eu un problème pendant le transfert.</div>'
+            + ' <div class="alert alert-danger"><strong>OULA !</strong> Il y a visiblement eu un problème pendant le transfert.</div>'
             + ' <p>Je n\'accuse personne, mais je pense qu\'il serait de bon ton de recommencer la procédure, parce que, là, je'
             + ' suis désolé mais ça n\'est pas passé...</p>'
             + ' <button class="btn btn-info" onClick="resetForm();">Revenir au formulaire</button>'
+            + ' <br/><br/><hr/><br/>'
+            + ' <p>Vous n\'arrivez pas à uploader votre vidéo ?<br/>Vous pouvez encore utiliser We-transfert (précisez le titre et la description de votre vidéo sur we-transfert.com) :<br/><a class="btn btn-default" href="https://www.wetransfer.com/" target="_blank">Utiliser We-transfert</a></p>'
             + ' </div>'
             + '</form>'
             + '</div>'
