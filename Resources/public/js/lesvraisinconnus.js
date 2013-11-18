@@ -2,7 +2,7 @@
 /*global window, $ */
 $(document).ready(function(){
   $('a.popin_vrais_inconnus').on('click', function(){
-     $(".modal-footer").css("display","block"); 
+     $(".modal-footer").show(); 
     //L'UTILISATEUR EST PAS CONNECTE
     $('#skModal.modal .modal-title').html(' ');
     $('#skModal.modal .modal-message').html('Pour nous envoyer votre parodie, créez d\’abord un compte ou connectez-vous sur votre compte myskreen en 1 clic. C\’est rapide et gratuit.'+
@@ -46,7 +46,7 @@ $(document).ready(function(){
         }
         //L'UTILISATEUR EST CONNECTE
         $('#skModal.modal .modal-title').html('PUBLIER UNE PARODIE');
-        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots. <br> Conseil de dernière minute : soignez le son et l\image, c\'est important.');
+        $('#skModal.modal .modal-message').html('Renseignez votre pseudo, donnez un titre à votre vidéo et présentez-la en quelques mots. <br> Conseil de dernière minute : soignez le son et l\'image, c\'est important.');
         $('#skModal.modal .modal-body').html(''
             + '<div class="scroll" style="overflow-y: auto;max-height: 350px;">'
             + '<form id="vraisinconnus_form" role="form" class="modal-catchform-disable" method="post" action="'+API.config.v3_root +'/_lesvraisinconnusbundle/done" enctype="multipart/form-data">'

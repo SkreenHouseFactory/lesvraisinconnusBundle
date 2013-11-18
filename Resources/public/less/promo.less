@@ -3,35 +3,25 @@
   ---------------------------------------------------
     A set of useful LESS mixins
     More info at: http://lesselements.com
-  ---------------------------------------------------*/
+    ---------------------------------------------------*/
 
-.gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
-  background: @color;
-  background: -webkit-gradient(linear,
-                               left bottom,
-                               left top,
-                               color-stop(0, @start),
-                               color-stop(1, @stop));
-  background: -ms-linear-gradient(bottom,
-                                  @start,
-                                  @stop);
-  background: -moz-linear-gradient(center bottom,
-                                   @start 0%,
-                                   @stop 100%);
-  background: -o-linear-gradient(@stop,
-                                 @start);
-  filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
-}
-
-
-
-
-
-
-
-
-
-/* FIN DES FONCTIONS  */
+    .gradient(@color: #F5F5F5, @start: #EEE, @stop: #FFF) {
+      background: @color;
+      background: -webkit-gradient(linear,
+       left bottom,
+       left top,
+       color-stop(0, @start),
+       color-stop(1, @stop));
+      background: -ms-linear-gradient(bottom,
+        @start,
+        @stop);
+      background: -moz-linear-gradient(center bottom,
+       @start 0%,
+       @stop 100%);
+      background: -o-linear-gradient(@stop,
+       @start);
+      filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",@stop,@start));
+    }
 
 
 
@@ -41,6 +31,15 @@
 
 
 
+    /* FIN DES FONCTIONS  */
+
+
+
+
+
+      body.view-channel-60{
+        background-color: #0B1E30!important;
+      }
 
 
 
@@ -49,74 +48,77 @@
 
 
 
-.header-container {
-  position: relative;
-  top: 0;
-  left: 0;
-  height: 450px;
 
-  &#channel60{
-    height: 535px;
-    #logo{
-      margin-left: 100px;
-      margin-top:150px;
-      width: 380px;
-      >a{
-        display: inline-block;
-        height: 80px;
-        width: 67px;
-        &.logo03{
-          background: url(/bundles/skreenhousefactoryv3/images/logo_03.png) no-repeat top left;
+
+
+    .header-container {
+      position: relative;
+      top: 0;
+      left: 0;
+      height: 450px;
+
+      &#channel60{
+        height: 535px;
+        #logo{
+          margin-left: 100px;
+          margin-top:150px;
+          width: 380px;
+          >a{
+            display: inline-block;
+            height: 80px;
+            width: 67px;
+            &.logo03{
+              background: url(http://mskstatic.com/medias/ftp/chaines/lesvraisinconnus/logo_france2.png) no-repeat top left;
+            }
+            &.logo04{
+              width: 178px;
+              background: url(/bundles/skreenhousefactoryv3/images/logo_04.png) no-repeat top left;
+            }
+            &.logo05{
+              width: 102px;
+              background: url(/bundles/skreenhousefactoryv3/images/logo_05.png) no-repeat top left;
+            }
+          }
         }
-        &.logo04{
-          width: 178px;
-          background: url(/bundles/skreenhousefactoryv3/images/logo_04.png) no-repeat top left;
+
+        .btn-upload{
+          position: absolute;
+          top: 288px;
+          left: 86px;
+          .gradient(#FFFFFF,#DBDEE0,#ECEFF1);
+          color: #A2296B;
+          font-size: 16px;
+          font-weight: bold;
+          min-height: 55px;
+          min-width: 288px;
+          line-height: 2.6em;
+          >i{
+            margin-right: 10px;
+          }
+          &:hover{
+            color:#FFFFFF;
+            background:#A2296B;
+          }
         }
-        &.logo05{
-          width: 102px;
-          background: url(/bundles/skreenhousefactoryv3/images/logo_05.png) no-repeat top left;
+        .header-content{
+          background:none;
+          top:0!important;
+          .share-block{
+            top: 294px;
+            left: 620px;
+          }
+          .player-wrap{
+            position: relative;
+            left: 535px;
+            width: 408px;
+            top: 202px;
+            iframe{
+              border: none;
+            }
+          }
         }
       }
     }
-
-    .btn-upload{
-      position: absolute;
-      top: 288px;
-      left: 86px;
-      .gradient(#FFFFFF,#DBDEE0,#ECEFF1);
-      color: #A2296B;
-      font-size: 16px;
-      font-weight: bold;
-      min-height: 55px;
-      min-width: 288px;
-      line-height: 2.6em;
-      >i{
-        margin-right: 10px;
-      }
-      &:hover{
-        color:#FFFFFF;
-        background:#A2296B;
-      }
-    }
-    .header-content{
-      background:none;
-      top:0!important;
-      .share-block{
-        top: 294px;
-        left: 620px;
-      }
-      .player-wrap{
-        position: relative;
-        left: 535px;
-        width: 408px;
-        top: 202px;
-        iframe{
-          border: none;
-        }
-      }
-    }
-  }
-}
 
 
 
@@ -174,21 +176,21 @@
   }
   .fileinput-button{
    background-color: #FFFFFF;
-    border: medium none;
-    color: #4C4C4C;
-    display: inline-block;
-    height: 51px;
-    line-height: 40px;
-    vertical-align: middle;
-    width: 35%;
-  }
+   border: medium none;
+   color: #4C4C4C;
+   display: inline-block;
+   height: 51px;
+   line-height: 40px;
+   vertical-align: middle;
+   width: 35%;
+ }
 
 
 }  
 
 
 .modal-body{
-.close{
+  .close{
     display: block!important;
     float: none!important;
     margin-left: auto!important;
