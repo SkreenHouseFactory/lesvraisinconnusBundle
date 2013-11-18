@@ -22,7 +22,12 @@ class SkreenHouseFactorylesVraisInconnusExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
+        $environment = $container->getParameterBag()->get('kernel.environment');
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
+        $loader->load('parameters_app_'.$environment.'.yml');
+
+
     }
 }
