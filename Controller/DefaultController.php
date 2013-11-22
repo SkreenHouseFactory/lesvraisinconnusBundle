@@ -15,6 +15,14 @@ ini_set('upload_max_filesize', '2048M');
 class DefaultController extends Controller
 {
 
+// PROD  
+     const DAILYMOTION_API_KEY    = 'aa81289b98515cba1e93';
+     const DAILYMOTION_API_SECRET = '2a68d63f959846fd17dc4ae689b685d6804b41e3';
+
+// DEV
+   // const DAILYMOTION_API_KEY = '6e6a0bed18211400adf7';
+   // const DAILYMOTION_API_SECRET = '4973b96c068de80195a2cb644437217f4959a529';
+
     const UPLOAD_PATH     = '/uploads/DM/';
 
     const ERR_FORM        = 1;
